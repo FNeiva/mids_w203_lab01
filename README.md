@@ -2,11 +2,8 @@
 Lab Assignment 1 for MIDS W203 - Stats for Data Science course
 Master in Information and Data Sciences - UC Berkeley
 
+## Group members:
 
-Group members:
-
-Felipe Campos
-
-Josh Wilson
-
-Stanimir Vichev
+* Felipe Campos
+* Josh Wilson
+* Stanimir Vichev
