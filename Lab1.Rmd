@@ -28,3 +28,10 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## This is Josh testing whether he understands how to use git and github!
+```{r}
+x <- rnorm(1000)
+y <- rnorm(1000)
+```
+
