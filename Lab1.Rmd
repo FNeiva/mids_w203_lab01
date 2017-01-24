@@ -29,9 +29,12 @@ plot(pressure)
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
-## This is Josh testing whether he understands how to use git and github!
+## Loading the Data 
 ```{r}
-x <- rnorm(1000)
-y <- rnorm(1000)
+load("~/mids_w203_lab01/ceo_w203.RData")
+
+# Different views of the dataset
+head(CEO)
+str(CEO)
 ```
 
