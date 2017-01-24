@@ -28,6 +28,7 @@ plot(pressure)
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ## Loading the Data 
+<<<<<<< HEAD
 ```{r}
 load("~/mids_w203_lab01/ceo_w203.RData")
 
@@ -52,6 +53,32 @@ The histogram of the dependent variable salary uncovers two important features a
 
 # Looking at scatterplots between variables prior to transformations
 ```{r}
+=======
+```{r}
+load("~/mids_w203_lab01/ceo_w203.RData")
+
+# Different views of the dataset
+head(CEO)
+str(CEO)
+```
+
+# Adding a Visualization package
+```{r,echo =FALSE}
+library("ggplot2")
+```
+
+# Histogram plot of the dependent variable, salary
+```{r}
+salary_hist <- ggplot(data = CEO, aes(x = salary))
+salary_hist + geom_histogram(bins = 40)
+
+```
+The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
+
+
+# Looking at scatterplots between variables prior to transformations
+```{r}
+>>>>>>> master
 pairs(CEO) # Useful for directing attention, otherwise ugly
 ```
 Going through the relationshiops of salary with all of the independent variables one-by-one and giving some initial thoughts.
@@ -83,9 +110,14 @@ Going through the relationshiops of salary with all of the independent variables
 9. Appears to be that the more education a person has, the likelier they are to be the head of a company with a higher market value.
 
 10. Between 50 and 70 years old is when companies with high market values choose you to be CEO.
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 
 =======
+11. It seems that CEOs are likely to be selected from inside a company. In comten vs. ceoten, many of the data points lie above the 45 degree line, meaning they were with the company longer than their CEO tenure.
+>>>>>>> master
+=======
+
 11. It seems that CEOs are likely to be selected from inside a company. In comten vs. ceoten, many of the data points lie above the 45 degree line, meaning they were with the company longer than their CEO tenure.
 >>>>>>> master
