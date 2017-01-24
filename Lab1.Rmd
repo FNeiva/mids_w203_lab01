@@ -87,3 +87,12 @@ Going through the relationshiops of salary with all of the independent variables
 10. Between 50 and 70 years old is when companies with high market values choose you to be CEO.
 
 11. It seems that CEOs are likely to be selected from inside a company. In comten vs. ceoten, many of the data points lie above the 45 degree line, meaning they were with the company longer than their CEO tenure.
+
+# Transforming the dependent variable
+```{r}
+log_salary_hist <- ggplot(data = CEO, aes(x = log(salary, base = 10)))
+log_salary_hist + geom_histogram(bins = 30)
+```
+
+Now we seem to have a more normal looking distribution. We still have some outliers, but they are now significantly closer to the central tendency.
+
