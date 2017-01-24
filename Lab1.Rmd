@@ -2,106 +2,116 @@
 title: "W203 Lab Assignment 1"
 author: "Felipe Campos, Josh Wilson and Stanimir Vichev"
 date: "1/23/2017"
-output: pdf_document
+output:
+  html_document: default
+  pdf_document: default
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 ## Introduction
-
 Introduction to the report
-
 ```{r ceo}
 load("ceo_w203.RData")
 ```
-
 ## Univariate Analysis of the Dataset
-
 You can also embed plots, for example:
-
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
-
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
 ## Loading the Data 
 ```{r}
 # Different views of the dataset
 head(CEO)
 str(CEO)
 ```
-
 # Adding a Visualization package
 ```{r,echo =FALSE}
 library("ggplot2")
 ```
-
 # Histogram plot of the dependent variable, salary
 ```{r}
 salary_hist <- ggplot(data = CEO, aes(x = salary))
 salary_hist + geom_histogram(bins = 40)
-
 ```
 The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
-
-
 # Looking at scatterplots between variables prior to transformations
 ```{r}
 # Different views of the dataset
 head(CEO)
 str(CEO)
 ```
-
 # Adding a Visualization package
 ```{r,echo =FALSE}
 library("ggplot2")
 ```
-
 # Histogram plot of the dependent variable, salary
 ```{r}
 salary_hist <- ggplot(data = CEO, aes(x = salary))
 salary_hist + geom_histogram(bins = 40)
-
 ```
 The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
-
-
 # Looking at scatterplots between variables prior to transformations
 ```{r}
 pairs(CEO) # Useful for directing attention, otherwise ugly
 ```
 Going through the relationshiops of salary with all of the independent variables one-by-one and giving some initial thoughts.
-
 # Salary and Age
 1. There seems to be a slight positive correlation between age and salary. If you are an older person who is a CEO, you are more likely to be paid more. We should also note that we have some very old people, >70, who are paid very little. It is possible they are CEOs in name only, or have small firms, or some other explanation.
-
 # Salary and College
 2. A lot more people who are CEOs went to college vs. not. Not enough data points for no-college CEOs to really compare the distributions.
-
 # Salary vs. grad school
 3. Salary doesn't seem to be impacted by whether you attended grad school or not. The outliers in salary are two people who didn't go to grad school.
-
 # Salary vs. Comten
 4. This one looks pretty random.
-
 # Salary vs. CeoTen
 5. This one also looks pretty random.
-
 # Salary vs. Profits
 6. There is a lot of bunching around 0, making this graph tough to analzye. Note that salary can be quite high regardless of company profits.
-
 # Salary vs. Mktval
 7. Similar to salary vs. profits.
-
 # Other key relationships
 8. Market val and profits seem linearly related. We might want to transform both of these variables.
-
 9. Appears to be that the more education a person has, the likelier they are to be the head of a company with a higher market value.
-
 10. Between 50 and 70 years old is when companies with high market values choose you to be CEO.
-
 11. It seems that CEOs are likely to be selected from inside a company. In comten vs. ceoten, many of the data points lie above the 45 degree line, meaning they were with the company longer than their CEO tenure.
-
+17. Cleaning up data
+```{r}
+CEO$mktval[CEO$mktval == -1] <- NA
+CEO$profits[CEO$profits == -1] <- NA
+CEO_complete <- CEO[complete.cases(CEO),]
+```
+12. Graduate school doesn't seem to affect salary that much.
+```{r}
+ggplot(data = CEO, aes(x = factor(college), y = salary) )+ geom_boxplot()
+ggplot(data = CEO, aes(x = factor(grad), y = salary) )+ geom_boxplot()
+```
+13. There are a lot of companies with low positive profits and low market value.
+```{r}
+hist(log(CEO_complete$profits+500, base = 10), breaks = 80)
+table(CEO$profits)
+plot(log(CEO_complete$profits, base = 10), log(CEO_complete$mktval, base =10))
+```
+14. Are bonuses included in the salaries?
+15. In a log scale relationship between profit(x) and salary(y) almost linear (apart from kink). In a log scale relationship between mktval(x) and salary(y) is very linear.
+```{r}
+ggplot(data = CEO_complete, aes(x=log10(profits), y=log10(salary))) + geom_point() + geom_smooth()
+ggplot(data = CEO_complete, aes(x=log10(mktval), y=log10(salary))) + geom_point() + geom_smooth()
+```
+16. If you plot log mktval(y) and salary(x), you see some outliers that really affect smooth line. Low salary, high mktval could be someone that gets all his money from bonuses/shares, not salary.
+```{r}
+ggplot(data = CEO_complete, aes(x=log10(salary), y=log10(mktval))) + geom_point() + geom_smooth()
+```
+17. Rich CEO might be interesting to look at 
+```{r}
+richCEO= subset( CEO,salary > 4000)
+summary(richCEO)
+```
+TODO:
+Intro and Conclusion
+Make graphs prettier
+Thorough univariate analysis of each key variable - look at age, comten, ceoten.
+Analysis of potential confounding effects - calculating mktval may include profits within it, so this could be one such effect.
+Explain in detail handling of -1s 
+Create another markdown file with skeleton structure
