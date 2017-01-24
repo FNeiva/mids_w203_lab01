@@ -96,3 +96,13 @@ log_salary_hist + geom_histogram(bins = 30)
 
 Now we seem to have a more normal looking distribution. We still have some outliers, but they are now significantly closer to the central tendency.
 
+# Log Transforming mktval and profits
+```{r}
+profit_hist <- ggplot(data = CEO, aes(x = profits))
+profit_hist + geom_histogram() # Notice some negative values
+
+range(CEO$profits)
+log_profit_hist <-  ggplot(data = CEO, aes(x = log((profits+464),base=10)))
+log_profit_hist + geom_histogram(bins = 40)
+```
+str(CEO)
