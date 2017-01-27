@@ -118,8 +118,21 @@ ten_ceo_hist <- ggplot(data = CEO_complete) +
   geom_vline(aes(xintercept=mean(comten)), colour = "red", linetype = "dashed") +
   geom_vline(aes(xintercept=mean(ceoten)), colour = "green", linetype = "dashed")
 ten_ceo_hist
-```
 
+mean(CEO_complete$comten)
+sd(CEO_complete$comten)
+kurtosis(CEO_complete$comten)
+
+mean(CEO_complete$ceoten)
+median(CEO_complete$ceoten)
+sd(CEO_complete$ceoten)
+kurtosis(CEO_complete$ceoten)
+```
+The comten variable appears to be bimodal, with one peak near 33 years and another at just under 10 years. This suggest that there may be two populations within this variable. The mean tenure of a CEO is just over 20 years with a very large standard deviation of approximately 12. However, the kurtosis of -1 suggests that we might be dealing with more of a uniformly distributed sample; this is certainly contrary to visual inspection, which we believe is more reliable in this case. We note the presence of a small right tail that skews the distribution a little bit. There is one apparent outlier: a CEO that has commited an entire lifetime to a company. <<We can discuss this further to make sure we are all in agreement>>
+
+The ceoten variable has a heavily, positively skewed distribution with most of the CEO's having tenure under 10 years. The mean and standard deviation are nearly equal at about 7 years. Given how bunched the data is around the mean, we believe the long right tail and some outliers are inflating the average. This is also evidenced by the median being less than the mean. Kurtosis is highly positive, agreeing with the peaked nature of the histogram. None of the CEOs in the sample have been CEO for longer than 40 years. 
+
+We note that both of these variables are left bounded, meaning they cannot go below zero.
 
 # Bivariate Relationship Analysis
 
