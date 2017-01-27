@@ -248,5 +248,5 @@ Intro and Conclusion
 Make graphs prettier
 Thorough univariate analysis of each key variable - look at age, comten, ceoten.
 Analysis of potential confounding effects - calculating mktval may include profits within it, so this could be one such effect.
-Explain in detail handling of -1s 
+Explain in detail handling of -1s: While investigating the quality of the profits variable, we found several negative values. It is reasonable that there would be negative values, as some companies are in a growth phase and spend more than their revenues. However, a preponderance of -1 values suggested that these values may have been coded as such to indicate a missing value. No other profit value is repeated (check on this), so the mere fact that we have X number of -1 values would be evidence of a coding matter.
 
