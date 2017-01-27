@@ -39,6 +39,11 @@ Cleaning up data
 CEO$mktval[CEO$mktval == -1] <- NA
 CEO$profits[CEO$profits == -1] <- NA
 CEO_complete <- CEO[complete.cases(CEO),]
+which(CEO_complete$ceoten > CEO_complete$comten) # this cannot be possible, so exclude data points that violate this rule
+which(CEO_complete$profits > CEO_complete$mktval) # That's good
+which(CEO_complete$comten > CEO_complete$age)
+which(CEO_complete$ceoten > CEO_complete$age)
+
 ```
 
 ## Univariate Analysis of the Dataset
