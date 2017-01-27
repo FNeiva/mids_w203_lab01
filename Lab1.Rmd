@@ -118,7 +118,7 @@ ten_ceo_hist
 ```
 
 
-Bivariate Relationship Analysis
+# Bivariate Relationship Analysis
 
 Going through the relationshiops of salary with all of the independent variables one-by-one and giving some initial thoughts.
 
