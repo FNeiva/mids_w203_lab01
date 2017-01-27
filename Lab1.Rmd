@@ -76,12 +76,16 @@ sd(log10(CEO_complete$salary))
 kurtosis(log10(CEO_complete$salary))
 
 ```
-The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
+The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables. <<possibly add kurtosis and descriptive statistics.>>
 
-# Histogram plot of mktval, first dependent variable
+# Histogram plot of mktval, first independent variable
 
-A lot of companies are on the lower spectrum of market values, with a gradual decrease in the number of companies with higher market values. This is in line with our normal assumptions about the distribution of companies in the stock market. The mean and the median are quite close because the outliers to the right are offset by the large number of companies with low market value.
 ```{r}
+mktval_hist <- ggplot(data = CEO_complete, aes(x = mktval))
+mktval_hist + geom_histogram(bins = 40)
+
+mean(CEO_complete$mktval)
+
 mktval_hist <- ggplot(data = CEO_complete, aes(x = log10(mktval)))
 mktval_hist + geom_histogram(bins = 40)
 hist(log10(CEO_complete$mktval), breaks = 40)
@@ -90,11 +94,13 @@ abline(v = mean(log10(CEO_complete$mktval)), col = "red")
 abline(v = median(log10(CEO_complete$mktval)), col = "royalblue")
 ```
 
-A lot of companies are on the lower spectrum of market values, with a gradual decrease in the number of companies with higher market values. This is in line with our normal assumptions about the distribution of companies in the stock market. The mean and the median are quite close because the outliers to the right are offset by the large number of companies with low market value.
+The market value histogram appears in line with intuition about the stock market; many companies have lower market values while very few have market values above $5 billion. Furthermore, the histogram shows that companies with very large market values are rather rare and can be considered as potential outliers. The heavy positve skew of this distribution suggests that a transformation may be needed to accomodate issues of heteroskedacity.
+
+When we log transform the market value variable, we see a lot of companies are on the lower spectrum of market values, with a gradual decrease in the number of companies with higher market values. This is in line with our normal assumptions about the distribution of companies in the stock market. The mean and the median are quite close because the outliers to the right are offset by the large number of companies with low market value.
 
 # Histogram plot of profits, the other key dependent variable
 
-We applied a log10 scale and added 500 to shift everything to the right. As profits can be negative, we don't see that much of a positive skew in this graph. There are again outliers present on both sides, with a lot of companies with profits around 500. The standard deviation of profits is 401, which explains why the distribution is so wide.
+
 ```{r}
 # first way
 profits_hist <- ggplot(data = CEO_complete, aes(x = log10(profits + 500)))
@@ -112,8 +118,7 @@ abline(v = median(CEO_complete$profits+500), col = "royalblue")
 
 sd(CEO_complete$profits)
 ```
-
-
+We applied a log10 scale and added 500 to shift everything to the right. As profits can be negative, we don't see that much of a positive skew in this graph. There are again outliers present on both sides, with a lot of companies with profits around 500. The standard deviation of profits is 401, which explains why the distribution is so wide.
 
 ```{r}
 age_hist <- ggplot(data = CEO_complete, aes(x = age))
