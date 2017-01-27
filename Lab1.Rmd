@@ -60,13 +60,19 @@ Explain in detail handling of -1s: While investigating the quality of the profit
 
 ```{r}
 
-# If we decided these histograms, make them look nicer
+# If we decided these histograms
+# More labels on the x-axis
+# Title, labels on the axes can be changes (Frequency on Y-axis)
 salary_hist <- ggplot(data = CEO_complete, aes(x = salary))
-salary_hist + geom_histogram(bins = 40)
+salary_hist + geom_histogram(bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + labs(title="Histogram CEO Salary") +
+    theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5))
 
 mean(CEO_complete$salary)
 sd(CEO_complete$salary)
 kurtosis(CEO_complete$salary)
+
+# Save this analysis for its own section
 
 log_salary_hist <- ggplot(data = CEO_complete, aes(x = log10(salary)))
 log_salary_hist + geom_histogram(bins = 30)
