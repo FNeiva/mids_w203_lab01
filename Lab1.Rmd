@@ -130,137 +130,65 @@ scatterplotMatrix( ~ salary + profits + mktval, data = CEO_complete, diagonal = 
 scatterplotMatrix( ~ salary + profits + mktval + age + college + grad + comten + ceoten, data = CEO_complete, diagonal = "histogram") # prettier
 ```
 
-Going through the relationshiops of salary with all of the independent variables one-by-one and giving some initial thoughts.
+
 # Salary and Age
+
 1. There seems to be a slight positive correlation between age and salary. If you are an older person who is a CEO, you are more likely to be paid more. We should also note that we have some very old people, >70, who are paid very little. It is possible they are CEOs in name only, or have small firms, or some other explanation.
 ```{r}
 plot(CEO_complete$age, CEO_complete$salary)
 abline(lm(CEO_complete$salary ~ CEO_complete$age))
 ```
-# Salary and College
-2. A lot more people who are CEOs went to college vs. not. Not enough data points for no-college CEOs to really compare the distributions.
-<<<<<<< HEAD
-<<<<<<< HEAD
-# Salary vs. grad school
-3. Salary doesn't seem to be impacted by whether you attended grad school or not. The outliers in salary are two people who didn't go to grad school.
-# Salary vs. Comten
-4. This one looks pretty random.
-# Salary vs. CeoTen
-5. This one also looks pretty random.
-# Salary vs. Profits
-6. There is a lot of bunching around 0, making this graph tough to analzye. Note that salary can be quite high regardless of company profits.
-# Salary vs. Mktval
-7. Similar to salary vs. profits.
-# Other key relationships
-8. Market val and profits seem linearly related. We might want to transform both of these variables.
 
-```{r}
-plot(CEO_complete$age, CEO_complete$salary)
-abline(lm(CEO_complete$salary ~ CEO_complete$age))
-```
 # Salary and College
+
 2. A lot more people who are CEOs went to college vs. not. Not enough data points for no-college CEOs to really compare the distributions.
 ```{r}
 plot(CEO_complete$college, CEO_complete$salary)
 ```
+
 # Salary vs. grad school
+
 3. Salary doesn't seem to be impacted by whether you attended grad school or not. The outliers in salary are two people who didn't go to grad school.
 ```{r}
 plot(CEO_complete$grad, CEO_complete$salary)
 ```
+
 # Salary vs. Comten
+
 4. This one looks pretty random, small positive relationship
 ```{r}
 plot(CEO_complete$comten, CEO_complete$salary)
 abline(lm(CEO_complete$salary ~ CEO_complete$comten))
 ```
+
 # Salary vs. CeoTen
+
 5. This one also looks pretty random, although slightly positive.
 ```{r}
 plot(CEO_complete$ceoten, CEO_complete$salary)
 abline(lm(CEO_complete$salary ~ CEO_complete$ceoten))
 ```
+
 # Salary vs. Profits
+
 6. There is a lot of bunching around 0, making this graph tough to analzye. Note that salary can be quite high regardless of company profits.
 ```{r}
 plot(CEO_complete$salary, CEO_complete$profits)
 abline(lm(CEO_complete$salary ~ CEO_complete$profits))
 ```
+
 # Salary vs. Mktval
-7. Similar to salary vs. profits.
-=======
-```{r}
-plot(CEO_complete$college, CEO_complete$salary)
-```
-# Salary vs. grad school
-3. Salary doesn't seem to be impacted by whether you attended grad school or not. The outliers in salary are two people who didn't go to grad school.
-```{r}
-plot(CEO_complete$grad, CEO_complete$salary)
-```
-# Salary vs. Comten
-4. This one looks pretty random, small positive relationship
-```{r}
-plot(CEO_complete$comten, CEO_complete$salary)
-abline(lm(CEO_complete$salary ~ CEO_complete$comten))
-```
-# Salary vs. CeoTen
-5. This one also looks pretty random, although slightly positive.
-```{r}
-plot(CEO_complete$ceoten, CEO_complete$salary)
-abline(lm(CEO_complete$salary ~ CEO_complete$ceoten))
-```
-# Salary vs. Profits
-6. There is a lot of bunching around 0, making this graph tough to analzye. Note that salary can be quite high regardless of company profits.
-```{r}
-plot(CEO_complete$salary, CEO_complete$profits)
-abline(lm(CEO_complete$salary ~ CEO_complete$profits))
-```
-# Salary vs. Mktval
-7. Similar to salary vs. profits.
->>>>>>> origin/master
-=======
-```{r}
-plot(CEO_complete$college, CEO_complete$salary)
-```
-# Salary vs. grad school
-3. Salary doesn't seem to be impacted by whether you attended grad school or not. The outliers in salary are two people who didn't go to grad school.
-```{r}
-plot(CEO_complete$grad, CEO_complete$salary)
-```
-# Salary vs. Comten
-4. This one looks pretty random, small positive relationship
-```{r}
-plot(CEO_complete$comten, CEO_complete$salary)
-abline(lm(CEO_complete$salary ~ CEO_complete$comten))
-```
-# Salary vs. CeoTen
-5. This one also looks pretty random, although slightly positive.
-```{r}
-plot(CEO_complete$ceoten, CEO_complete$salary)
-abline(lm(CEO_complete$salary ~ CEO_complete$ceoten))
-```
-# Salary vs. Profits
-6. There is a lot of bunching around 0, making this graph tough to analzye. Note that salary can be quite high regardless of company profits.
-```{r}
-plot(CEO_complete$salary, CEO_complete$profits)
-abline(lm(CEO_complete$salary ~ CEO_complete$profits))
-```
-# Salary vs. Mktval
-7. Similar to salary vs. profits.
->>>>>>> origin/master
-```{r}
-plot(CEO_complete$salary, CEO_complete$profits)
-abline(lm(CEO_complete$profits ~ CEO_complete$salary))
-```
-# Other key relationships
-8. Market val and profits seem linearly related. We might want to transform both of these variables.
+
+7. Market val and profits seem linearly related. We might want to transform both of these variables.
 ```{r}
 plot(CEO_complete$mktval, CEO_complete$profits)
 abline(lm(CEO_complete$profits ~ CEO_complete$mktval))
 ```
 
 9. Appears to be that the more education a person has, the likelier they are to be the head of a company with a higher market value.
+
 10. Between 50 and 70 years old is when companies with high market values choose you to be CEO.
+
 11. It seems that CEOs are likely to be selected from inside a company. In comten vs. ceoten, many of the data points lie above the 45 degree line, meaning they were with the company longer than their CEO tenure.
 
 # Transforming the dependent variable
@@ -280,25 +208,6 @@ range(CEO$profits)
 log_profit_hist <-  ggplot(data = CEO, aes(x = log((profits+464),base=10)))
 log_profit_hist + geom_histogram(bins = 40)
 ```
-str(CEO)
-=======
->>>>>>> e993f026640bdbed1c2c64cf31fc5a4187efcbea
-=======
-=======
-17. Cleaning up data
-```{r}
-CEO$mktval[CEO$mktval == -1] <- NA
-CEO$profits[CEO$profits == -1] <- NA
-CEO_complete <- CEO[complete.cases(CEO),]
-```
-
-
-
-=======
->>>>>>> origin/master
-=======
->>>>>>> origin/master
->>>>>>> f7f0701d2c85c64c2e96ed330313bda3b80c3da3
 
 12. Graduate school doesn't seem to affect salary that much.
 ```{r}
@@ -321,13 +230,6 @@ ggplot(data = CEO_complete, aes(x=log10(profits), y=log10(salary))) + geom_point
 ggplot(data = CEO_complete, aes(x=log10(mktval), y=log10(salary))) + geom_point() + geom_smooth()
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
-=======
->>>>>>> origin/master
 16. If you plot log mktval(y) and salary(x), you see some outliers that really affect smooth line. Low salary, high mktval could be someone that gets all his money from bonuses/shares, not salary.
 ```{r}
 ggplot(data = CEO_complete, aes(x=log10(salary), y=log10(mktval))) + geom_point() + geom_smooth()
@@ -337,14 +239,6 @@ ggplot(data = CEO_complete, aes(x=log10(salary), y=log10(mktval))) + geom_point(
 ```{r}
 richCEO= subset( CEO,salary > 4000)
 summary(richCEO)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
-=======
-
->>>>>>> origin/master
 ```
 
 18. It is hard to judge company performance from just a single year of data.
@@ -355,12 +249,4 @@ Make graphs prettier
 Thorough univariate analysis of each key variable - look at age, comten, ceoten.
 Analysis of potential confounding effects - calculating mktval may include profits within it, so this could be one such effect.
 Explain in detail handling of -1s 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
-=======
->>>>>>> origin/master
-Create another markdown file with skeleton structure
->>>>>>> bd676cea9a9ed2a3e4366e43f60f522093dd945a
