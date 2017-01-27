@@ -7,24 +7,84 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library("ggplot2")
 ```
 
-## R Markdown
+# Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The focus of this study is to try to determine whether a company's performance is related to its CEO salary. To accomplish that, data gathered from a selection of different companies will be used and the whole treatment and analysis of the data will be documented in this study along with relevant findings. The conclusions taken from these findings will then be discussed.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+It is important for the purpose of this study, however, to initially discuss the design of this analysis and the concepts used to operationalize it. The most relevant concept used throughout this report is company performance, given that it is what we will be measuring against CEO data. We can use a conceptual definition that a successful company is one that has an increased market value and is able to consistently deliver results. Therefore, to measure a company's performance this concept will be operationalized in this study by measuring that company's market value as well as its profitability. Therefore, a company could be considered as presenting successful performance if it delivered profits in accordance to its market value. 
 
-```{r cars}
-summary(cars)
+
+# Data and Univariate Analysis
+
+We begin our study by loading the data gathered from the companies being studied and analyzing the main variables available.
+
+```{r data load and summary}
+load("ceo_w203.RData")
+names(CEO)
 ```
 
-## Including Plots
+In the dataset used in this report, we have the following data measured from selected companies:
 
-You can also embed plots, for example:
+- **CEO Salary**, which is the compensation for the CEO in the year 1990, measured in thousands of dollar;
+- **CEO Age**, measuring the age of the CEO in years;
+- **CEO College Education**, indicating whether the CEO completed college education, being 1 for yes and 0 for no;
+- **CEO Graduate Education**, indicating whether the CEO completed graduate level education, being 1 for yes and 0 for no;
+- **CEO Total Time Within Company**, which measures the time the CEO has been an employee of that company in years;
+- **CEO Time Within Company as CEO**, measuring the time the CEO has held that position in the company in years;
+- **Company Profitability**, which measures the profitability for that company in the year of 1990 in millions of dollars;
+- **Company Market Value**, indicating the market value for the company in the year of 1990 in millions of dollars;
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Each of theses variables will be now thoroughly analyzed and discussed independently.
+
+## CEO Salary
+
+We begin by analyzing the histogram of the CEO Salary variable.
+
+```{r salary histogram}
+salary_hist <- ggplot(data = CEO, aes(x = salary))
+salary_hist + geom_histogram(bins = 40)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
+
+## CEO Age
+
+
+## CEO College Education
+
+
+## CEO Graduation Education
+
+
+## CEO Total Time Within Company
+
+
+## CEO Time Within Company as CEO
+
+
+## Company Profitability
+
+
+## Company Market Value
+
+
+# Data Treatment
+
+
+
+# Analysis of Bivariate Relationships
+
+
+
+# Potential Confounding Effects in Bivariate Relationships
+
+
+
+# Conclusion
+
+
+
+
