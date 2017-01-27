@@ -48,18 +48,33 @@ which(CEO_complete$ceoten > CEO_complete$age)
 # 2. They would have been CEO since 16 years old
 # 3. This person is running a company and still manages to pick up a grad degree and undergrad degree by 21?
 CEO_complete[87,] # Stan agrees that we can remove this point.
+CEO_complete <- CEO_complete[-87,]
+# Cleaning up the data paragraph or two, describing various erroneous entries, missing values, and the reasoning behind our decisions.
+
 ```
+Explain in detail handling of -1s: While investigating the quality of the profits variable, we found several negative values. It is reasonable that there would be negative values, as some companies are in a growth phase and spend more than their revenues. However, a preponderance of -1 values suggested that these values may have been coded as such to indicate a missing value. No other profit value is repeated (check on this), so the mere fact that we have X number of -1 values would be evidence of a coding matter.
 
 ## Univariate Analysis of the Dataset
 
 # Histogram plot of the dependent variable, salary
 
 ```{r}
+
+# If we decided these histograms, make them look nicer
 salary_hist <- ggplot(data = CEO_complete, aes(x = salary))
 salary_hist + geom_histogram(bins = 40)
 
-log_salary_hist <- ggplot(data = CEO, aes(x = log(salary, base = 10)))
+mean(CEO_complete$salary)
+sd(CEO_complete$salary)
+kurtosis(CEO_complete$salary)
+
+log_salary_hist <- ggplot(data = CEO_complete, aes(x = log10(salary)))
 log_salary_hist + geom_histogram(bins = 30)
+
+mean(log10(CEO_complete$salary))
+sd(log10(CEO_complete$salary))
+kurtosis(log10(CEO_complete$salary))
+
 ```
 The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
 
@@ -275,5 +290,3 @@ Intro and Conclusion
 Make graphs prettier
 Thorough univariate analysis of each key variable - look at age, comten, ceoten.
 Analysis of potential confounding effects - calculating mktval may include profits within it, so this could be one such effect.
-Explain in detail handling of -1s: While investigating the quality of the profits variable, we found several negative values. It is reasonable that there would be negative values, as some companies are in a growth phase and spend more than their revenues. However, a preponderance of -1 values suggested that these values may have been coded as such to indicate a missing value. No other profit value is repeated (check on this), so the mere fact that we have X number of -1 values would be evidence of a coding matter.
-
