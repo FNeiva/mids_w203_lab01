@@ -43,7 +43,11 @@ which(CEO_complete$ceoten > CEO_complete$comten) # this cannot be possible, so e
 which(CEO_complete$profits > CEO_complete$mktval) # That's good
 which(CEO_complete$comten > CEO_complete$age)
 which(CEO_complete$ceoten > CEO_complete$age)
-
+# If you look at observation 87, we see a bunch of weird stuff
+# 1. CEOTen > ComTen
+# 2. They would have been CEO since 16 years old
+# 3. This person is running a company and still manages to pick up a grad degree and undergrad degree by 21?
+CEO_complete[87,]
 ```
 
 ## Univariate Analysis of the Dataset
