@@ -38,7 +38,7 @@ Cleaning up data
 ```{r}
 CEO$mktval[CEO$mktval == -1] <- NA
 CEO$profits[CEO$profits == -1] <- NA
-CEO_complete <- CEO[complete.cases(CEO),]
+CEO_complete <- CEO[complete.cases(CEO),] # We have to note how many we are excluding and why
 which(CEO_complete$ceoten > CEO_complete$comten) # this cannot be possible, so exclude data points that violate this rule
 which(CEO_complete$profits > CEO_complete$mktval) # That's good
 which(CEO_complete$comten > CEO_complete$age)
@@ -47,16 +47,19 @@ which(CEO_complete$ceoten > CEO_complete$age)
 # 1. CEOTen > ComTen
 # 2. They would have been CEO since 16 years old
 # 3. This person is running a company and still manages to pick up a grad degree and undergrad degree by 21?
-CEO_complete[87,]
+CEO_complete[87,] # Stan agrees that we can remove this point.
 ```
 
 ## Univariate Analysis of the Dataset
 
-# Histogram plot of the independent variable, salary
+# Histogram plot of the dependent variable, salary
 
 ```{r}
 salary_hist <- ggplot(data = CEO_complete, aes(x = salary))
 salary_hist + geom_histogram(bins = 40)
+
+log_salary_hist <- ggplot(data = CEO, aes(x = log(salary, base = 10)))
+log_salary_hist + geom_histogram(bins = 30)
 ```
 The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
 
@@ -218,8 +221,7 @@ abline(lm(CEO_complete$profits ~ CEO_complete$mktval))
 
 # Transforming the dependent variable
 ```{r}
-log_salary_hist <- ggplot(data = CEO, aes(x = log(salary, base = 10)))
-log_salary_hist + geom_histogram(bins = 30)
+
 ```
 
 Now we seem to have a more normal looking distribution. We still have some outliers, but they are now significantly closer to the central tendency.
