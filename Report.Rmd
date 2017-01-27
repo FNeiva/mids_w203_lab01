@@ -7,11 +7,15 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+<<<<<<< HEAD
 library("ggplot2")
+=======
+>>>>>>> master
 ```
 
 # Introduction
 
+<<<<<<< HEAD
 The focus of this study is to try to determine whether a company's performance is related to its CEO salary. To accomplish that, data gathered from a selection of different companies will be used and the whole treatment and analysis of the data will be documented in this study along with relevant findings. The conclusions taken from these findings will then be discussed.
 
 It is important for the purpose of this study, however, to initially discuss the design of this analysis and the concepts used to operationalize it. The most relevant concept used throughout this report is company performance, given that it is what we will be measuring against CEO data. We can use a conceptual definition that a successful company is one that has an increased market value and is able to consistently deliver results. Therefore, to measure a company's performance this concept will be operationalized in this study by measuring that company's market value as well as its profitability. Therefore, a company could be considered as presenting successful performance if it delivered profits in accordance to its market value. 
@@ -88,3 +92,20 @@ The histogram of the dependent variable salary uncovers two important features a
 
 
 
+=======
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+>>>>>>> master
