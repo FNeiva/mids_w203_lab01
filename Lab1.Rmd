@@ -64,9 +64,9 @@ Explain in detail handling of -1s: While investigating the quality of the profit
 # More labels on the x-axis
 # Title, labels on the axes can be changes (Frequency on Y-axis)
 salary_hist <- ggplot(data = CEO_complete, aes(x = salary))
-salary_hist + geom_histogram(bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + labs(title="Histogram CEO Salary") +
+salary_hist + geom_histogram(bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + labs(title="Histogram of CEO Salary") +
     theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
-        plot.title = element_text(hjust = .5))
+        plot.title = element_text(hjust = .5)) + geom_vline(aes(xintercept=mean(salary)), colour = "red", linetype = "dashed") + geom_vline(aes(xintercept=median(salary)), colour = "blue", linetype = "dashed")
 
 mean(CEO_complete$salary)
 sd(CEO_complete$salary)
