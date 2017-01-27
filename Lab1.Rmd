@@ -1,7 +1,7 @@
 ---
 title: "W203 Lab Assignment 1"
 author: "Felipe Campos, Josh Wilson and Stanimir Vichev"
-date: "1/23/2017"
+date: "1/27/2017"
 output:
   html_document: default
   pdf_document: default
@@ -20,22 +20,23 @@ Introduction to the report
 load("ceo_w203.RData")
 ```
 
-## Univariate Analysis of the Dataset
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-# Adding a Visualization package
+# Packages used in analysis
 ```{r,echo =FALSE}
 library("ggplot2")
 library(car)
+install.packages("e1071")
+library(e1071)
 ```
+
+# Some general info on the dataset
+# Different views of the dataset
+```{r}
+head(CEO)
+str(CEO)
+```
+
+## Univariate Analysis of the Dataset
+
 
 # Histogram plot of the independent variable, salary
 ```{r}
@@ -44,12 +45,36 @@ salary_hist + geom_histogram(bins = 40)
 ```
 The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
 
-# Some general info on the dataset
-# Different views of the dataset
+# Histogram plots of dependent variables
 ```{r}
-head(CEO)
-str(CEO)
+age_hist <- ggplot(data = CEO, aes(x = age))
+age_hist + geom_histogram(bins = 60)
+kurtosis(CEO$age)
+mean(CEO$age)
+sd(CEO$age)
 ```
+
+The distribution of age in the sample looks fairly normal, except for the distinct peak at the center. From the kurtosis calculation, we might say this sample has more in common with a logistic distribution than a normal distribution. Of course, this is only a sample of 185, and we might find that kurtosis will approach 0 as the sample grows. However, it is likely that the lack of heavy tails is an important feature of CEO age, because we see the sparseness in CEOs below 30 and over 75. We could easily come up with an ad hoc story suggesting that CEOs below 30 don't have the requisite experience and CEOs above 75 cannot handle the rigors of the job. Another view would be to label points above 75 and below 30 as outliers, but this would be hasty without further information. We note that the mean is fairly high at 55 years old and the standard deviation is also rather large at 9.5.
+
+# Univariate analysis of education
+```{r}
+table(CEO$college)
+
+table(CEO$grad)
+```
+For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table with the college variable, less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. There is less evidence to suggest that a graduate degree confers much additional advantage in becoming a CEO. Although the more interesting comparisons would be the education of CEOs to the average education of the population. We believe that CEOs represent a group of highly educated people in comparison to the average population.
+
+# Univariate Examination of ComTen and CEOTen
+```{r}
+ten_ceo_hist <- ggplot(data = CEO) + 
+  geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
+  geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
+  scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank()) +
+  labs(fill = "Tenure Type") + xlab("Years")
+ten_ceo_hist
+```
+
 
 # Looking at scatterplots between variables prior to transformations
 ```{r}
