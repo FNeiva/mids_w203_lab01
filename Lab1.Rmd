@@ -112,8 +112,11 @@ ten_ceo_hist <- ggplot(data = CEO_complete) +
   geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
   geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
   scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
-  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank()) +
-  labs(fill = "Tenure Type") + xlab("Years")
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Years as CEO and Years at Company", fill = "Tenure Type") + xlab("Years") + ylab("Count") + 
+  geom_vline(aes(xintercept=mean(comten)), colour = "red", linetype = "dashed") +
+  geom_vline(aes(xintercept=mean(ceoten)), colour = "green", linetype = "dashed")
 ten_ceo_hist
 ```
 
