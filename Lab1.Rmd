@@ -102,6 +102,10 @@ When we log transform the market value variable, we see a lot of companies are o
 
 
 ```{r}
+# zeroeth way
+profits_hist <- ggplot(data = CEO_complete, aes(x = profits))
+profits_hist + geom_histogram(bins = 40)
+
 # first way
 profits_hist <- ggplot(data = CEO_complete, aes(x = log10(profits + 500)))
 profits_hist + geom_histogram(bins = 40)
@@ -232,6 +236,14 @@ abline(lm(CEO_complete$salary ~ CEO_complete$profits))
 plot(CEO_complete$mktval, CEO_complete$profits)
 abline(lm(CEO_complete$profits ~ CEO_complete$mktval))
 ```
+
+
+# Mktval vs. profits
+```{r}
+plot(log10(CEO_complete$mktval), log10(CEO_complete$profits+500))
+cor(log10(CEO_complete$mktval), log10(CEO_complete$profits+500))
+```
+
 
 8. Appears to be that the more education a person has, the likelier they are to be the head of a company with a higher market value.
 
