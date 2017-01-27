@@ -16,44 +16,21 @@ Introduction to the report
 ```{r ceo}
 load("ceo_w203.RData")
 ```
-<<<<<<< HEAD
 
-# Packages used in analysis
-=======
-## Univariate Analysis of the Dataset
-You can also embed plots, for example:
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-<<<<<<< HEAD
-<<<<<<< HEAD
+# Some general info on the dataset
+# Different views of the dataset
 ```{r}
 # Different views of the dataset
 head(CEO)
 str(CEO)
 ```
-=======
->>>>>>> origin/master
 
-=======
->>>>>>> origin/master
-
-# Adding a Visualization package
->>>>>>> f7f0701d2c85c64c2e96ed330313bda3b80c3da3
+# Packages used in analysis
 ```{r,echo =FALSE}
 library("ggplot2")
 library(car)
 install.packages("e1071")
 library(e1071)
-```
-
-# Some general info on the dataset
-# Different views of the dataset
-```{r}
-head(CEO)
-str(CEO)
 ```
 
 ## Univariate Analysis of the Dataset
