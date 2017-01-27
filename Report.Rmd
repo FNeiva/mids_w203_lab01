@@ -16,6 +16,8 @@ The focus of this study is to try to determine whether a company's performance i
 
 It is important for the purpose of this study, however, to initially discuss the design of this analysis and the concepts used to operationalize it. The most relevant concept used throughout this report is company performance, given that it is what we will be measuring against CEO data. We can use a conceptual definition that a successful company is one that has an increased market value and is able to consistently deliver results. Therefore, to measure a company's performance this concept will be operationalized in this study by measuring that company's market value as well as its profitability. Therefore, a company could be considered as presenting successful performance if it delivered profits in accordance to its market value. 
 
+# Possible inclusion of discussion about operationalization of salary and company performance
+
 # Data and Univariate Analysis
 
 We begin our study by loading the data gathered from the companies being studied and analyzing the main variables available.

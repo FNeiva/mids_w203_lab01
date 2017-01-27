@@ -194,10 +194,25 @@ scatterplotMatrix( ~ salary + profits + mktval, data = CEO_complete, diagonal = 
 
 scatterplotMatrix( ~ salary + profits + mktval + age + college + grad + comten + ceoten, data = CEO_complete, diagonal = "histogram") # prettier
 
-plotmatrix(CEO[,1:4]), colour = "black")
+
 ?plotmatrix
 ```
+```{r}
+scatterplotMatrix( ~ log10(salary) + log10(mktval) + log10(profits), data = CEO_complete, diagonal = "histogram")
+```
 
+The market value measure is a more measure of a company than profits. Profits can be fairly volatile year to year whereas the market value will not be as affected by profit volatility. The linear relationship between market value and profits leads us to believe that profits may be a confounding variable in this analysis. The negative values in profit are create problems for analyzing its relationship with salary. The spike in profit throws off the analysis, and we beleive that a more heterogeneous sample for companies would reveal a more distinct relationship between salary and profit. There is a positive linear relationship between salary and market value.
+
+```{r}
+scatterplotMatrix( ~ log10(salary) + age + comten + ceoten, data = CEO_complete, diagonal = "histogram")
+```
+
+
+Row 1, Columns 2:4
+Surprisingly, age, CEO tenure, and company tenure do not appear to have a strong relationship with log salary. There are a few exceptions. For example, if you are between 60 and 70 years old, you might see a slight raise in your salary, and if you have survived 3 or 4 years at the company as CEO you might also see a slight raise in your salary. The smoothed lines tends to drop off toward the right tail of the scatterplots because data becomes scarce and the lines local average basically goes to the one or two points.
+
+# Boxplots of salary by college and grad
+# Boxplots of mktval by college and grad
 
 # Salary and Age
 
