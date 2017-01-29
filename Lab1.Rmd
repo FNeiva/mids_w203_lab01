@@ -263,6 +263,17 @@ abline(lm(CEO_complete$salary ~ CEO_complete$age))
 2. A lot more people who are CEOs went to college vs. not. Not enough data points for no-college CEOs to really compare the distributions.
 ```{r}
 plot(CEO_complete$college, CEO_complete$salary)
+
+CEO$ed <- factor(CEO$college + CEO$grad)
+levels(CEO$ed) <- c("No College", "College", "Grad School")
+head(CEO)
+salary_v_ed <- ggplot(data = CEO, aes(x = factor(ed), y = salary))
+salary_v_ed + geom_boxplot() + 
+  stat_summary(fun.y="mean", geom="point", shape = 23, size =3, fill = "red") +
+  xlab("Level of Education") + ylab("Salary in USD (1000s)") +
+  labs(title="CEO Salary vs. Level of Education") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5))
 ```
 
 # Salary vs. grad school
