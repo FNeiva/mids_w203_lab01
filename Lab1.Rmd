@@ -28,7 +28,7 @@ str(CEO)
 # Packages used in analysis
 ```{r,echo =FALSE}
 library("ggplot2")
-#install.packages("car")
+install.packages("car")
 library("car")
 #install.packages("e1071")
 #library(e1071)
@@ -190,6 +190,7 @@ For categorical variables such as college and grad, we examined their frequency 
 
 # Univariate Examination of ComTen and CEOTen
 ```{r}
+
 ten_ceo_hist <- ggplot(data = CEO) 
 ten_ceo_hist + geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
   geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
@@ -226,7 +227,7 @@ Going through the relationshiops of salary with all of the independent variables
 
 # Scatterplot matrix of key variables
 ```{r}
-scatterplotMatrix( ~ salary + profits + mktval, data = CEO_complete, diagonal = "histogram")
+scatterplotMatrix( ~ salary + profits + mktval, data = CEO, diagonal = "histogram")
 
 scatterplotMatrix( ~ salary + profits + mktval + age + college + grad + comten + ceoten, data = CEO_complete, diagonal = "histogram") # prettier
 
