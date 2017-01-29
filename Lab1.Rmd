@@ -82,7 +82,7 @@ sd(log10(CEO_complete$salary))
 kurtosis(log10(CEO_complete$salary))
 
 ```
-The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables. <<possibly add kurtosis and descriptive statistics.>>
+The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. The mean being greater than the median demonstrates the effect of the right tail. Second, there are two or more possible outliers. The positive skew is illustrated through the fact that the leftmost values of the graph are only approximately 1.5 standard deviations away from the mean, while the higher values can exceed this. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.  We also note that it is not possible to have a salary less than 0. Moreover, we understand that outliers often tell very interesting stories in their own right, and we have labeled the clear outlier as the "rich ceo". At this moment, we cannot discard the "rich ceo" because there is no evidence that this is an error.
 
 # Histogram plot of mktval, first independent variable
 
@@ -138,13 +138,20 @@ mean(CEO_complete$age)
 sd(CEO_complete$age)
 ```
 
-The distribution of age in the sample looks fairly normal, except for the distinct peak at the center. From the kurtosis calculation, we might say this sample has more in common with a logistic distribution than a normal distribution. Of course, this is only a sample of 185, and we might find that kurtosis will approach 0 as the sample grows. However, it is likely that the lack of heavy tails is an important feature of CEO age, because we see the sparseness in CEOs below 30 and over 75. We could easily come up with an ad hoc story suggesting that CEOs below 30 don't have the requisite experience and CEOs above 75 cannot handle the rigors of the job. Another view would be to label points above 75 and below 30 as outliers, but this would be hasty without further information. We note that the mean is fairly high at 55 years old and the standard deviation is also rather large at 9.5.
+The distribution of age in the sample looks fairly normal, except for the distinct peak at the center. From the kurtosis calculation, we might say this sample has more in common with a logistic distribution than a normal distribution. Of course, this is only a sample of 185, and we might find that kurtosis will approach 0 as the sample grows. However, it is likely that the lack of heavy tails is an important feature of CEO age, because we see the sparseness in CEOs below 30 and over 75. We could easily come up with an ad hoc story suggesting that CEOs below 30 don't have the requisite experience and CEOs above 75 cannot handle the rigors of the job. Moreover, the CEOs who are older than 75 may be CEOs in name only, with much of the business operations carried out by others. <<This might be verified by having very low salaries and/or very low market value companies.>> Another view would be to label points above 75 and below 30 as outliers, but this would be hasty without further information. We note that the mean is fairly high at 55 years old and the standard deviation is also rather large at 9.5. 
 
 # Univariate analysis of education
 ```{r}
-table(CEO_complete$college)
+# We should turn all of the categorical variables into factor variables with proper level names
+str(CEO)
+levels(CEO$college) <- c("No College","Has College")
 
-table(CEO_complete$grad)
+table(CEO$college) # Add column names
+
+table(CEO_complete$college, CEO_complete$grad)
+CEO$college <- as.factor(CEO$college)
+which(CEO$college == 0 & CEO$grad == 1)
+CEO[c(16,51),] # Possible survey error: this could either be a double entry with the age messed up, or survey error where college was incorrectly answered, or even CO-CEOs with slightly different age.
 ```
 For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table with the college variable, less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. There is less evidence to suggest that a graduate degree confers much additional advantage in becoming a CEO. Although the more interesting comparisons would be the education of CEOs to the average education of the population. We believe that CEOs represent a group of highly educated people in comparison to the average population.
 
@@ -186,8 +193,26 @@ Going through the relationshiops of salary with all of the independent variables
 scatterplotMatrix( ~ salary + profits + mktval, data = CEO_complete, diagonal = "histogram")
 
 scatterplotMatrix( ~ salary + profits + mktval + age + college + grad + comten + ceoten, data = CEO_complete, diagonal = "histogram") # prettier
+
+
+?plotmatrix
+```
+```{r}
+scatterplotMatrix( ~ log10(salary) + log10(mktval) + log10(profits), data = CEO_complete, diagonal = "histogram")
 ```
 
+The market value measure is a more measure of a company than profits. Profits can be fairly volatile year to year whereas the market value will not be as affected by profit volatility. The linear relationship between market value and profits leads us to believe that profits may be a confounding variable in this analysis. The negative values in profit are create problems for analyzing its relationship with salary. The spike in profit throws off the analysis, and we beleive that a more heterogeneous sample for companies would reveal a more distinct relationship between salary and profit. There is a positive linear relationship between salary and market value.
+
+```{r}
+scatterplotMatrix( ~ log10(salary) + age + comten + ceoten, data = CEO_complete, diagonal = "histogram")
+```
+
+
+Row 1, Columns 2:4
+Surprisingly, age, CEO tenure, and company tenure do not appear to have a strong relationship with log salary. There are a few exceptions. For example, if you are between 60 and 70 years old, you might see a slight raise in your salary, and if you have survived 3 or 4 years at the company as CEO you might also see a slight raise in your salary. The smoothed lines tends to drop off toward the right tail of the scatterplots because data becomes scarce and the lines local average basically goes to the one or two points.
+
+# Boxplots of salary by college and grad
+# Boxplots of mktval by college and grad
 
 # Salary and Age
 

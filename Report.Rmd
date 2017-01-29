@@ -16,6 +16,7 @@ The focus of this study is to try to determine whether a company's performance i
 
 It is important for the purpose of this study, however, to initially discuss the design of this analysis and the concepts used to operationalize it. The most relevant concept used throughout this report is company performance, given that it is what we will be measuring against CEO data. We can use a conceptual definition that a successful company is one that has an increased market value and is able to consistently deliver results. Therefore, to measure a company's performance this concept will be operationalized in this study by measuring that company's market value as well as its profitability. Therefore, a company could be considered as presenting successful performance if it delivered profits in accordance to its market value. 
 
+# Possible inclusion of discussion about operationalization of salary and company performance
 
 # Data and Univariate Analysis
 
@@ -48,10 +49,16 @@ salary_hist <- ggplot(data = CEO, aes(x = salary))
 salary_hist + geom_histogram(bins = 40)
 ```
 
-The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. Second, there are two or more possible outliers. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.
+The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. The mean being greater than the median demonstrates the effect of the right tail. Second, there are two or more possible outliers. The positive skew is illustrated through the fact that the leftmost values of the graph are only approximately 1.5 standard deviations away from the mean, while the higher values can exceed this. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.  We also note that it is not possible to have a salary less than 0. Moreover, we understand that outliers often tell very interesting stories in their own right, and we have labeled the clear outlier as the "rich ceo". At this moment, we cannot discard the "rich ceo" because there is no evidence that this is an error.
 
 ## CEO Age
 
+```{r}
+age_hist <- ggplot(data = CEO_complete, aes(x = age))
+age_hist + geom_histogram(bins = 60)
+```
+
+The distribution of age in the sample looks fairly normal, except for the distinct peak at the center. From the kurtosis calculation, we might say this sample has more in common with a logistic distribution than a normal distribution. Of course, this is only a sample of 185, and we might find that kurtosis will approach 0 as the sample grows. However, it is likely that the lack of heavy tails is an important feature of CEO age, because we see the sparseness in CEOs below 30 and over 75. We could easily come up with an ad hoc story suggesting that CEOs below 30 don't have the requisite experience and CEOs above 75 cannot handle the rigors of the job. Moreover, the CEOs who are older than 75 may be CEOs in name only, with much of the business operations carried out by others. <<This might be verified by having very low salaries and/or very low market value companies.>> Another view would be to label points above 75 and below 30 as outliers, but this would be hasty without further information. We note that the mean is fairly high at 55 years old and the standard deviation is also rather large at 9.5. 
 
 ## CEO College Education
 
