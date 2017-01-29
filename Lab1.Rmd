@@ -190,16 +190,19 @@ For categorical variables such as college and grad, we examined their frequency 
 
 # Univariate Examination of ComTen and CEOTen
 ```{r}
-ten_ceo_hist <- ggplot(data = CEO_complete) + 
-  geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
+ten_ceo_hist <- ggplot(data = CEO) 
+ten_ceo_hist + geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
   geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
   scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
         plot.title = element_text(hjust = .5)) +
-  labs(title = "Years as CEO and Years at Company", fill = "Tenure Type") + xlab("Years") + ylab("Count") + 
-  geom_vline(aes(xintercept=mean(comten)), colour = "red", linetype = "dashed") +
-  geom_vline(aes(xintercept=mean(ceoten)), colour = "green", linetype = "dashed")
-ten_ceo_hist
+  labs(title = "Years as CEO and Years at Company", fill = "Tenure Type") +
+  xlab("Years") + ylab("Count") +
+  geom_vline(aes(xintercept=mean(comten), colour = "mean comten"), linetype = "dashed") +
+  geom_vline(aes(xintercept=mean(ceoten), colour = "mean ceoten"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(mean = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0,10,20,30,40,50,60)) + scale_y_continuous(breaks = seq(0,35,5))
+
 
 mean(CEO_complete$comten)
 sd(CEO_complete$comten)
