@@ -177,13 +177,12 @@ The distribution of age in the sample looks fairly normal, except for the distin
 # Univariate analysis of education
 ```{r}
 # We should turn all of the categorical variables into factor variables with proper level names
-str(CEO)
-levels(CEO$college) <- c("No College","Has College")
-
-table(CEO$college) # Add column names
-
-table(CEO_complete$college, CEO_complete$grad)
 CEO$college <- as.factor(CEO$college)
+CEO$grad <- as.factor(CEO$grad)
+levels(CEO$grad) <- c("No Grad", "Grad")
+levels(CEO$college) <- c("No College", "College")
+table(CEO$college, CEO$grad)
+
 which(CEO$college == 0 & CEO$grad == 1)
 CEO[c(16,51),] # Possible survey error: this could either be a double entry with the age messed up, or survey error where college was incorrectly answered, or even CO-CEOs with slightly different age.
 ```
