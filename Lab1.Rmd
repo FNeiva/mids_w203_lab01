@@ -63,10 +63,19 @@ Explain in detail handling of -1s: While investigating the quality of the profit
 # If we decided these histograms
 # More labels on the x-axis
 # Title, labels on the axes can be changes (Frequency on Y-axis)
-salary_hist <- ggplot(data = CEO_complete, aes(x = salary))
-salary_hist + geom_histogram(bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + labs(title="Histogram of CEO Salary") +
-    theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
-        plot.title = element_text(hjust = .5)) + geom_vline(aes(xintercept=mean(salary)), colour = "red", linetype = "dashed") + geom_vline(aes(xintercept=median(salary)), colour = "blue", linetype = "dashed")
+salary_hist <- ggplot(data = CEO, aes(x = salary))
+salary_hist + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + 
+  labs(title="Histogram of CEO Salary") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(salary), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(salary), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0, 1000, 2000, 3000, 4000, 5000)) + scale_y_continuous(breaks = c(0, 5, 10, 15, 20, 25, 30))
+
+mean(CEO$salary)
+sd(CEO$salary)
+kurtosis(CEO$salary)
 
 mean(CEO_complete$salary)
 sd(CEO_complete$salary)
