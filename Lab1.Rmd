@@ -28,10 +28,10 @@ str(CEO)
 # Packages used in analysis
 ```{r,echo =FALSE}
 library("ggplot2")
-install.packages("car")
+#install.packages("car")
 library("car")
-install.packages("e1071")
-library(e1071)
+#install.packages("e1071")
+#library(e1071)
 ```
 
 Cleaning up data
