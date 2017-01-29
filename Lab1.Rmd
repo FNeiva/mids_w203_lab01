@@ -125,8 +125,17 @@ When we log transform the market value variable, we see a lot of companies are o
 
 ```{r}
 # zeroeth way
-profits_hist <- ggplot(data = CEO_complete, aes(x = profits))
-profits_hist + geom_histogram(bins = 40)
+profits_hist <- ggplot(data = CEO, aes(x = profits))
+profits_hist + geom_histogram(fill = "white", colour = "black", bins = 40) + 
+  xlab("Profits in USD (Millions)") + ylab("Frequency") +
+  labs(title="Histogram of Company Profits in USD (Millions)") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(profits), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(profits), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(-500, 0, 500, 1000, 1500, 2000, 2500, 3000)) + 
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
 
 # first way
 profits_hist <- ggplot(data = CEO_complete, aes(x = log10(profits + 500)))
