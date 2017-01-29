@@ -18,6 +18,44 @@ It is important for the purpose of this study, however, to initially discuss the
 
 # Possible inclusion of discussion about operationalization of salary and company performance
 
+# Handling of Variable Coding Issues and Missing Values
+
+	Our careful examination of the data revealed that some variables, such as mktval and profits, had missing values, and that certain entries appeared to be erroneous. An initial check revealed no NA values, but looking at the mktval variable we could see some -1 values. 
+```{r}
+CEO[!complete.cases(CEO),]
+CEO[which(CEO$mktval == -1),]
+```
+
+As a company’s market value cannot be negative, we reasoned that -1 indicates missing data. As the five rows that has missing mktval also had -1 for profits, we reasoned that the same coding principle was used for that variable as well. While profits can be negative, it looks like -1 was exclusively used for missing data.
+```{r}
+CEO[which(CEO$profits == -1),]
+```
+
+The missing values were all in our key variables, so we couldn’t proceed with these rows in our analysis. Therefore, we set the -1 values to NA and removed the five rows from the set.
+```{r}
+CEO$mktval[CEO$mktval == -1] <- NA
+CEO$profits[CEO$profits == -1] <- NA
+CEO_complete <- CEO[complete.cases(CEO),]
+```
+
+During our analysis, we tried to determine if any instances contained erroneous data that could impact our results. Checking whether any of the CEOs had comten less than ceoten (meaning that they worked in the company fewer years than they were CEO there), we found one row with such wrong values. 
+```{r}
+CEO_complete[CEO_complete$ceoten > CEO_complete$comten, ]
+```
+
+We also saw two CEOs that had gone to grad school, but not to college, which seems highly unlikely to be true. Furthermore, the two rows seem to be almost exactly the same, apart from the age. Similar to the above, it looks like these values could have been entered twice incorrectly.
+```{r}
+CEO_complete[CEO_complete$grad > CEO_complete$college, ]
+```
+
+We decided to remove these three wrong rows, so that they didn’t influence any conclusions we drew from the data set.
+```{r}
+ceoten_comten_error = which(CEO_complete$ceoten > CEO_complete$comten)
+CEO_complete <- CEO_complete[-ceoten_comten_error,]
+grad_college_error = which(CEO_complete$grad > CEO_complete$college)
+CEO_complete <- CEO_complete[-grad_college_error,]
+```
+
 # Data and Univariate Analysis
 
 We begin our study by loading the data gathered from the companies being studied and analyzing the main variables available.
