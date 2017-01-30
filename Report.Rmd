@@ -94,6 +94,7 @@ salary_hist <- ggplot(data = CEO, aes(x = salary)) + geom_histogram(fill = "whit
   geom_vline(aes(xintercept=median(salary), colour = "median"), linetype = "dashed") + 
   scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
   scale_x_continuous(breaks = c(0, 1000, 2000, 3000, 4000, 5000)) + scale_y_continuous(breaks = c(0, 5, 10, 15, 20, 25, 30))
+salary_hist
 
 # Histogram with clean data
 
@@ -116,8 +117,6 @@ The histogram of the dependent variable salary uncovers two important features a
 ```{r}
 # Need to find a way to align x-axes in top and bottom graphs  
 
-par(mfrow=c(1,2))
-?par
 age_hist <- ggplot(data = CEO, aes(x = age)) + geom_histogram(fill = "white", 
                                                               colour = "black", bins = 40) + 
   xlab("Years") + ylab("Frequency") +
@@ -284,7 +283,7 @@ mktval_hist_final
 
 ```{r}
 profits_hist_final <- ggplot(data = CEO_complete, aes(x = log10(profits + 500))) + 
-  geom_histogram(fill = "white", colour = "black", bins = 40) + 
+  geom_histogram(fill = "white", colour = "black", bins = 60) + 
   xlab("Log Profits in USD (Millions)") + ylab("Frequency") +
   labs(title="Histogram of Company Profits in USD (Millions) Log Scale") +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
