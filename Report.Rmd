@@ -163,6 +163,42 @@ cor(CEO_complete$salary, CEO_complete$ceoten) # 0.1429477
 cor(log10(CEO_complete$salary), CEO_complete$ceoten) # 0.114728
 ```
 
+# Looking at secondary variables relationships
+
+
+
+
+Bivariate analysis of Market Value vs. Profit
+```{r}
+mktval_v_profits <- ggplot(data = CEO_complete, aes(x = log10(CEO_complete$mktval), 
+                                           y = log10(CEO_complete$profits + 500))) +
+  geom_point(position = position_jitter(width = 0, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("Company Market Value in USD (Millions) on Log Scale") +
+  ylab("Company Profits in USD (Millions) on Log Scale") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Company Market Value vs. Company Profits on Log-Log Scale")
+  
+mktval_v_profits
+cor(log10(CEO_complete$mktval),log10(CEO_complete$profits + 500)) # 0.6988081
+```
+
+# Possibly including the relationship of salary in the above graph
+```{r}
+mktval_v_profits_v2 <- ggplot(data = CEO_complete, aes(x = log10(CEO_complete$mktval), 
+                                           y = log10(CEO_complete$profits + 500),
+                                           colour = log10(CEO_complete$salary))) +
+  geom_point(position = position_jitter(width = 0.25, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("Company Market Value in USD (Millions) on Log Scale") +
+  ylab("Company Profits in USD (Millions) on Log Scale") +
+  theme(legend.position = c(1,0), legend.justification= c(1,0), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Company Market Value vs. Company Profits on Log-Log Scale", colour ="Log Salary")
+  
+mktval_v_profits_v2
+```
+
+
 # Potential Confounding Effects in Bivariate Relationships
 
 
