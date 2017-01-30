@@ -257,6 +257,20 @@ The market value histogram appears in line with intuition about the stock market
 
 # Data Treatment
 
+Market Value 
+```{r}
+mktval_hist_final <- ggplot(data = CEO_complete, aes(x=log10(mktval))) + 
+  geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Market Value in USD (Millions)") + ylab("Frequency") + 
+  labs(title="Histogram of Market Value") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(CEO_complete$mktval), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO_complete$mktval), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red"))
+mktval_hist_final
+
+```
+
 
 
 # Analysis of Bivariate Relationships (uses cleaned data and transformations)
