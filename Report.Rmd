@@ -120,9 +120,39 @@ The distribution of age in the sample looks fairly normal, except for the distin
 
 
 
-# Analysis of Bivariate Relationships
+# Analysis of Bivariate Relationships (uses cleaned data and transformations)
 
+Salary and market value
+```{r}
+salary_v_mktval <- ggplot(data = CEO_complete, aes(x = log10(CEO_complete$mktval), 
+                                           y = log10(CEO_complete$salary))) +
+  geom_point(alpha=.5) + geom_smooth() +
+  xlab("Company Market Value in USD (Millions) on Log Scale") +
+  ylab("CEO Salary in USD (1000s) on Log Scale") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "CEO Salary vs. Company Market Value on Log-Log Scale")
+  
+salary_v_mktval
+cor(log10(CEO_complete$mktval),log10(CEO_complete$salary)) # 0.481491
+```
 
+Salary and education
+```{r}
+# The two lines below will be moved up to the "coding issues" section.
+CEO_complete$ed <- factor(CEO_complete$college + CEO_complete$grad)
+levels(CEO_complete$ed) <- c("No College", "College", "Grad School")
+
+salary_v_ed <- ggplot(data = CEO_complete, aes(x = factor(ed), y = salary))
+salary_v_ed + geom_boxplot() + 
+  stat_summary(fun.y="mean", geom="point", shape = 23, size =3, fill = "red") +
+  xlab("Level of Education") + ylab("Salary in USD (1000s)") +
+  labs(title="CEO Salary vs. Level of Education") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5))
+```
+
+Salary vs. Experience
 
 # Potential Confounding Effects in Bivariate Relationships
 
