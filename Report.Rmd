@@ -199,7 +199,23 @@ mktval_v_profits_v2
 ```
 
 
+Tenure as CEO vs. Age with Company Tenure
+
 # Potential Confounding Effects in Bivariate Relationships
+```{r}
+CeoTen_v_tenure <- ggplot(data = CEO_complete, aes(x = CEO_complete$ceoten, 
+                                           y = CEO_complete$age,
+                                           colour = CEO_complete$comten)) +
+  geom_point(position = position_jitter(width = 0.0, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("Years as CEO") +
+  ylab("Years on Earth") +
+  theme(legend.position = c(1,0), legend.justification= c(1,0), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "CEO Tenure vs. Age", colour ="Years at Co") +
+  scale_color_gradient(low = "white", high = "blue") + scale_x_continuous(breaks = c(0,35,5))
+  
+CeoTen_v_tenure
+```
 
 
 
