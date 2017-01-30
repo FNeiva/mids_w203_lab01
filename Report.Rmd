@@ -8,6 +8,8 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("ggplot2")
+install.packages("gridExtra")
+library("gridExtra")
 ```
 
 # Introduction
@@ -22,6 +24,7 @@ It is important for the purpose of this study, however, to initially discuss the
 
 	Our careful examination of the data revealed that some variables, such as mktval and profits, had missing values, and that certain entries appeared to be erroneous. An initial check revealed no NA values, but looking at the mktval variable we could see some -1 values. 
 ```{r}
+load("ceo_w203.RData")
 CEO[!complete.cases(CEO),]
 CEO[which(CEO$mktval == -1),]
 ```
@@ -83,8 +86,27 @@ Each of theses variables will be now thoroughly analyzed and discussed independe
 We begin by analyzing the histogram of the CEO Salary variable.
 
 ```{r salary histogram}
-salary_hist <- ggplot(data = CEO, aes(x = salary))
-salary_hist + geom_histogram(bins = 40)
+salary_hist <- ggplot(data = CEO, aes(x = salary)) + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + 
+  labs(title="Histogram of CEO Salary") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(salary), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(salary), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0, 1000, 2000, 3000, 4000, 5000)) + scale_y_continuous(breaks = c(0, 5, 10, 15, 20, 25, 30))
+
+# Histogram with clean data
+
+salary_hist_clean <- ggplot(data = CEO_complete, aes(x = salary)) + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + 
+  labs(title="Histogram of CEO Salary (Clean Data)") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(CEO_complete$salary), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO_complete$salary), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0, 1000, 2000, 3000, 4000, 5000)) + scale_y_continuous(breaks = c(0, 5, 10, 15, 20, 25, 30))
+
+grid.arrange(salary_hist, salary_hist_clean)
 ```
 
 The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. The mean being greater than the median demonstrates the effect of the right tail. Second, there are two or more possible outliers. The positive skew is illustrated through the fact that the leftmost values of the graph are only approximately 1.5 standard deviations away from the mean, while the higher values can exceed this. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.  We also note that it is not possible to have a salary less than 0. Moreover, we understand that outliers often tell very interesting stories in their own right, and we have labeled the clear outlier as the "rich ceo". At this moment, we cannot discard the "rich ceo" because there is no evidence that this is an error.
@@ -92,28 +114,145 @@ The histogram of the dependent variable salary uncovers two important features a
 ## CEO Age
 
 ```{r}
-age_hist <- ggplot(data = CEO_complete, aes(x = age))
-age_hist + geom_histogram(bins = 60)
+# Need to find a way to align x-axes in top and bottom graphs  
+
+par(mfrow=c(1,2))
+?par
+age_hist <- ggplot(data = CEO, aes(x = age)) + geom_histogram(fill = "white", 
+                                                              colour = "black", bins = 40) + 
+  xlab("Years") + ylab("Frequency") +
+  labs(title="Histogram of CEO Age") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(age), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(age), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = seq(20,90,5))
+
+age_hist_clean <- ggplot(data = CEO_complete, aes(x = age)) + geom_histogram(fill = "white", 
+                                                                             colour = "black", bins = 40) + 
+  xlab("Years") + ylab("Frequency") +
+  labs(title="Histogram of CEO Age") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(age), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(age), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = seq(20,90,5))
+
+grid.arrange(age_hist, age_hist_clean)
+?grid.arrange
 ```
 
 The distribution of age in the sample looks fairly normal, except for the distinct peak at the center. From the kurtosis calculation, we might say this sample has more in common with a logistic distribution than a normal distribution. Of course, this is only a sample of 185, and we might find that kurtosis will approach 0 as the sample grows. However, it is likely that the lack of heavy tails is an important feature of CEO age, because we see the sparseness in CEOs below 30 and over 75. We could easily come up with an ad hoc story suggesting that CEOs below 30 don't have the requisite experience and CEOs above 75 cannot handle the rigors of the job. Moreover, the CEOs who are older than 75 may be CEOs in name only, with much of the business operations carried out by others. <<This might be verified by having very low salaries and/or very low market value companies.>> Another view would be to label points above 75 and below 30 as outliers, but this would be hasty without further information. We note that the mean is fairly high at 55 years old and the standard deviation is also rather large at 9.5. 
 
-## CEO College Education
-
-
-## CEO Graduation Education
-
+## CEO Education
+```{r}
+# Still need to make this table look nicer!
+CEO$college <- as.factor(CEO$college)
+CEO$grad <- as.factor(CEO$grad)
+levels(CEO$grad) <- c("No Grad", "Grad")
+levels(CEO$college) <- c("No College", "College")
+table(CEO$college, CEO$grad)
+table(CEO_complete$college, CEO_complete$grad)
+```
+For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table with the college variable, less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. There is less evidence to suggest that a graduate degree confers much additional advantage in becoming a CEO. Although the more interesting comparisons would be the education of CEOs to the average education of the population. We believe that CEOs represent a group of highly educated people in comparison to the average population.
 
 ## CEO Total Time Within Company
+```{r}
+ten_ceo_hist <- ggplot(data = CEO) + geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
+  geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
+  scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Years as CEO and Years at Company", fill = "Tenure Type") +
+  xlab("Years") + ylab("Count") +
+  geom_vline(aes(xintercept=mean(comten), colour = "mean comten"), linetype = "dashed") +
+  geom_vline(aes(xintercept=mean(ceoten), colour = "mean ceoten"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(mean = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0,10,20,30,40,50,60)) + scale_y_continuous(breaks = seq(0,35,5))
 
+# Clean Data Version
+ten_ceo_hist_clean <- ggplot(data = CEO_complete) + geom_histogram(aes(x = comten, fill = "comten"), 
+                                                             alpha = 0.3, position = "identity") +
+  geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
+  scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Years as CEO and Years at Company (Clean Data)", fill = "Tenure Type") +
+  xlab("Years") + ylab("Count") +
+  geom_vline(aes(xintercept=mean(CEO_complete$comten), colour = "mean comten"), linetype = "dashed") +
+  geom_vline(aes(xintercept=mean(CEO_complete$ceoten), colour = "mean ceoten"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(mean = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0,10,20,30,40,50,60)) + scale_y_continuous(breaks = seq(0,35,5))
 
-## CEO Time Within Company as CEO
+grid.arrange(ten_ceo_hist, ten_ceo_hist_clean)
+
+```
+The comten variable appears to be bimodal, with one peak near 33 years and another at just under 10 years. This suggest that there may be two populations within this variable. The mean tenure of a CEO is just over 20 years with a very large standard deviation of approximately 12. However, the kurtosis of -1 suggests that we might be dealing with more of a uniformly distributed sample; this is certainly contrary to visual inspection, which we believe is more reliable in this case. We note the presence of a small right tail that skews the distribution a little bit. There is one apparent outlier: a CEO that has commited an entire lifetime to a company. <<We can discuss this further to make sure we are all in agreement>>
+
+The ceoten variable has a heavily, positively skewed distribution with most of the CEO's having tenure under 10 years. The mean and standard deviation are nearly equal at about 7 years. Given how bunched the data is around the mean, we believe the long right tail and some outliers are inflating the average. This is also evidenced by the median being less than the mean. Kurtosis is highly positive, agreeing with the peaked nature of the histogram. None of the CEOs in the sample have been CEO for longer than 40 years. 
+
+We note that both of these variables are left bounded, meaning they cannot go below zero.
 
 
 ## Company Profitability
+```{r}
+profits_hist <- ggplot(data = CEO, aes(x = profits)) + 
+  geom_histogram(fill = "white", colour = "black", bins = 40) + 
+  xlab("Profits in USD (Millions)") + ylab("Frequency") +
+  labs(title="Histogram of Company Profits in USD (Millions)") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(profits), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(profits), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(-500, 0, 500, 1000, 1500, 2000, 2500, 3000)) + 
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
+
+profits_hist_clean <- ggplot(data = CEO_complete, aes(x = profits)) + 
+  geom_histogram(fill = "white", colour = "black", bins = 40) + 
+  xlab("Profits in USD (Millions)") + ylab("Frequency") +
+  labs(title="Histogram of Company Profits in USD (Millions) (Clean Data)") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(CEO_complete$profits), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO_complete$profits), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(-500, 0, 500, 1000, 1500, 2000, 2500, 3000)) + 
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
+
+grid.arrange(profits_hist, profits_hist_clean)
+```
 
 
 ## Company Market Value
+```{r}
+mktval_hist <- ggplot(data = CEO, aes(x=CEO$mktval)) + 
+  geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Market Value in USD (Millions)") + ylab("Frequency") + 
+  labs(title="Histogram of Market Value") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(CEO$mktval), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO$mktval), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000)) + 
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
+
+mktval_hist_clean <- ggplot(data = CEO_complete, aes(x=mktval)) + 
+  geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Market Value in USD (Millions)") + ylab("Frequency") + 
+  labs(title="Histogram of Market Value") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+  plot.title = element_text(hjust = .5)) + 
+  geom_vline(aes(xintercept=mean(CEO_complete$mktval), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO_complete$mktval), colour = "median"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
+  scale_x_continuous(breaks = c(0, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000)) + 
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
+
+grid.arrange(mktval_hist, mktval_hist_clean)
+```
+The market value histogram appears in line with intuition about the stock market; many companies have lower market values while very few have market values above $5 billion. Furthermore, the histogram shows that companies with very large market values are rather rare and can be considered as potential outliers. The heavy positve skew of this distribution suggests that a transformation may be needed to accomodate issues of heteroskedacity.
 
 
 # Data Treatment
