@@ -36,6 +36,16 @@ library("car")
 
 Cleaning up data
 ```{r}
+which(CEO$mktval == -1)
+which(CEO$profits == -1) # 91 117 134 156 160
+# Rows Excluded and number excluded
+
+which(CEO$grad > CEO$college)
+CEO[c(16,51),] # We pull both from the dataset
+
+
+
+
 CEO$mktval[CEO$mktval == -1] <- NA
 CEO$profits[CEO$profits == -1] <- NA
 CEO_complete <- CEO[complete.cases(CEO),] # We have to note how many we are excluding and why
