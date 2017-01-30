@@ -212,7 +212,7 @@ CeoTen_v_tenure <- ggplot(data = CEO_complete, aes(x = CEO_complete$ceoten,
   theme(legend.position = c(1,0), legend.justification= c(1,0), legend.background = element_blank(),
         plot.title = element_text(hjust = .5)) +
   labs(title = "CEO Tenure vs. Age", colour ="Years at Co") +
-  scale_color_gradient(low = "white", high = "blue") + scale_x_continuous(breaks = c(0,35,5))
+  scale_color_gradient(low = "blue", high = "white") + scale_x_continuous(breaks = seq(0,35,5))
   
 CeoTen_v_tenure
 ```
