@@ -414,38 +414,38 @@ cor(log10(CEO_complete$salary),log10(CEO_complete$profits + 500))
 
 While it is likely that companies with good profitability would reward their CEO with a high salary, it is unlikely that this would be sole reason. It is possible that there is another variable driving both the salary and the profits, just like market value, which is creating a confounding effect.
 
-## Market Value and Company Tenure
+## Market Value and CEO Experience
 
-There is also a slight relationship between the time a CEO has been working for a company and that company's market value, as shown in the graph below:
+There is a slight relationship between the time a CEO has been working for a company and that company's market value, as shown in the graph below:
 
 ```{r}
 mktval_v_profits <- ggplot(data = CEO_complete, aes(x = CEO_complete$comten, 
-                                           y = CEO_complete$mktval)) +
+                                           y = log10(CEO_complete$mktval))) +
   geom_point(position = position_jitter(width = 0, height = 0.25), alpha=.5) + geom_smooth() +
-  xlab("Company Market Value in USD (Millions) on Log Scale") +
-  ylab("Company Profits in USD (Millions) on Log Scale") +
+  xlab("CEO Total Company Tenure in Years") +
+  ylab("Company Market Value in USD (Millions) on Log Scale") +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
         plot.title = element_text(hjust = .5)) +
-  labs(title = "Company Market Value vs. Company Profits on Log-Log Scale")
+  labs(title = "CEO Total Company Tenure vs. Company Market Value on Log Scale")
   
 mktval_v_profits
-cor(CEO_complete$comten,CEO_complete$mktval)
+cor(CEO_complete$comten,log10(CEO_complete$mktval))
 ```
 
-There is also a slight relationship between the age of a CEO and the company's market value:
+And there is also a slight relationship between the age of a CEO and the company's market value:
 
 ```{r}
-mktval_v_profits <- ggplot(data = CEO_complete, aes(x = CEO_complete$age, 
-                                           y = CEO_complete$mktval)) +
+mktval_v_profits <- ggplot(data = CEO_complete, aes(x = log10(CEO_complete$age), 
+                                           y = log10(CEO_complete$mktval))) +
   geom_point(position = position_jitter(width = 0, height = 0.25), alpha=.5) + geom_smooth() +
-  xlab("Company Market Value in USD (Millions) on Log Scale") +
-  ylab("Company Profits in USD (Millions) on Log Scale") +
+  xlab("CEO Age in Years on Log Scale") +
+  ylab("Company Market Value in USD (Millions) on Log Scale") +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
         plot.title = element_text(hjust = .5)) +
-  labs(title = "Company Market Value vs. Company Profits on Log-Log Scale")
+  labs(title = "CEO Age vs. Company Market Value on Log-Log Scale")
   
 mktval_v_profits
-cor(CEO_complete$age,CEO_complete$mktval)
+cor(log10(CEO_complete$age),log10(CEO_complete$mktval))
 ```
 
 Therefore, given that both the age and the time he has been working for that company are both measures for the CEO's experience, it could be plausible that CEOs who are more experienced in the company's business tend to help drive its market value.
