@@ -18,8 +18,11 @@ The purpose of this exploratory data analysis is to determine whether there is a
 
 Initially we will discuss how the constructs were operationalized in the study. This will lead us into an investigation of each variable’s sample distribution. From the univariate analysis, we will discuss oddities we found in the data and the necessary steps we took to create a clean data set. Then, we explore the bivariate relationships within the data, including a section on potential confounding effects. Lastly, we reiterate our key findings in the conclusion as well as some apparent limitations to the study. 
 
-# Possible inclusion of discussion about operationalization of salary and company performance
+# Operationalization of Constructs in Analysis  
 
+Before we can begin an analysis of the data, we have to determine the key concepts and how they were operationalized. If there is too much flexibility in how an operationalized variable can be interpreted, then the study design will be flawed and the results must be taken with a grain of salt. In our study, the salient yet undefined concept is company performance. We can define a successful company as one that has increased its market value over time and is able to consistently deliver results. Therefore, we can infer from this intuitive definition that measuring a company's market value should provide a perspective into company performance. (We note that are many different ways to calculate market value, and we cannot be sure how this term is defined in the data set.) However, many investors interpret a successful company as that which delivers high profitability versus share size. Therefore, “company performance” could also be reasonably measured by profits. 
+
+A more meaningful measure of company performance might come from simple feature engineering. Profits as a standalone measure is fairly meaningless without taking into account the size of the company. In which case, a ratio of profits to the market value might provide unforeseen insight into the relationship of company performance and a CEO’s salary.
 # Handling of Variable Coding Issues and Missing Values
 
 	Our careful examination of the data revealed that some variables, such as mktval and profits, had missing values, and that certain entries appeared to be erroneous. An initial check revealed no NA values, but looking at the mktval variable we could see some -1 values. 
