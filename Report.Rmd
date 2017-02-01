@@ -114,7 +114,7 @@ In conducting a routine inspection of the profits data, we discovered that there
 
 ## CEO Age
 
-```{r}
+```{r, warning = FALSE}
 age_hist <- ggplot(data = CEO, aes(x = age)) +
   geom_histogram(fill = "white", colour = "black", bins = 40) + 
   xlab("Years") + ylab("Frequency") +
@@ -141,10 +141,17 @@ levels(CEO$grad) <- c("No Grad", "Grad")
 levels(CEO$college) <- c("No College", "College")
 kable(table(CEO$college, CEO$grad), format = "markdown")
 ```
-For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table with the college variable, less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. There is less evidence to suggest that a graduate degree confers much additional advantage in becoming a CEO. Although the more interesting comparisons would be the education of CEOs to the average education of the population. We believe that CEOs represent a group of highly educated people in comparison to the average population.
+For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table is that less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. Meanwhile, there is less evidence to suggest that a post-tertiary degree confers much additional advantage over a college degree in becoming a CEO. While more education would be considered beneficial within the general population, it could be the case that extensive work and leadership experience is more valuable when senior management positions are filled. That is, the position for CEO tends to attract or possibly require highly educated individuals.
+
+Finally, there are two CEOs that went to grad school, but not to college, which seems highly unlikely to be true. It is possible to imagine situations where people who have not gone to college go on to get honorary degrees from universities for special achievements, thus falling in the above case. However, since we have no information on the way the data was gathered, we cannot assume such honorary degrees were included in the study. Furthermore, these two CEOs seem to be almost exactly the same, apart from the age, as seen in their records from the sample shown below: 
+
+```{r}
+CEO[c(16,51),]
+```
+We suspect that this might be a case of erroneous entry that was recorded twice, meaning that these entries should be excluded from the analysis. As the comparison between the dirty (including two entries) and the clean data shows, the omission of these two variables does not have a meaningful effect on the results drawn from the study.
 
 ## CEO Total Time Within Company
-```{r}
+```{r, warning = FALSE, message = FALSE}
 ten_ceo_hist <- ggplot(data = CEO) + geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
   geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
   scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
