@@ -34,3 +34,6 @@ vignettes/*.pdf
 
 # Output PDF files
 *.pdf
+
+# RStudio Project Files
+*.Rproj
