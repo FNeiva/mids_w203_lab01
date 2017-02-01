@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library("ggplot2")
 library("gridExtra")
 library("knitr")
+library("car")
+library(e1071)
 ```
 
 # Introduction
@@ -23,44 +25,6 @@ Initially we will discuss how the constructs were operationalized in the study. 
 Before we can begin an analysis of the data, we have to determine the key concepts and how they were operationalized. If there is too much flexibility in how an operationalized variable can be interpreted, then the study design will be flawed and the results must be taken with a grain of salt. In our study, the salient yet undefined concept is company performance. We can define a successful company as one that has increased its market value over time and is able to consistently deliver results. Therefore, we can infer from this intuitive definition that measuring a company's market value should provide a perspective into company performance. (We note that are many different ways to calculate market value, and we cannot be sure how this term is defined in the data set.) However, many investors interpret a successful company as that which delivers high profitability versus share size. Therefore, “company performance” could also be reasonably measured by profits. 
 
 A more meaningful measure of company performance might come from simple feature engineering. Profits as a standalone measure is fairly meaningless without taking into account the size of the company. In which case, a ratio of profits to the market value might provide unforeseen insight into the relationship of company performance and a CEO’s salary.
-# Handling of Variable Coding Issues and Missing Values
-
-	Our careful examination of the data revealed that some variables, such as mktval and profits, had missing values, and that certain entries appeared to be erroneous. An initial check revealed no NA values, but looking at the mktval variable we could see some -1 values. 
-```{r}
-load("ceo_w203.RData")
-CEO[!complete.cases(CEO),]
-CEO[which(CEO$mktval == -1),]
-```
-
-As a company’s market value cannot be negative, we reasoned that -1 indicates missing data. As the five rows that has missing mktval also had -1 for profits, we reasoned that the same coding principle was used for that variable as well. While profits can be negative, it looks like -1 was exclusively used for missing data.
-```{r}
-CEO[which(CEO$profits == -1),]
-```
-
-The missing values were all in our key variables, so we couldn’t proceed with these rows in our analysis. Therefore, we set the -1 values to NA and removed the five rows from the set.
-```{r}
-CEO$mktval[CEO$mktval == -1] <- NA
-CEO$profits[CEO$profits == -1] <- NA
-CEO_complete <- CEO[complete.cases(CEO),]
-```
-
-During our analysis, we tried to determine if any instances contained erroneous data that could impact our results. Checking whether any of the CEOs had comten less than ceoten (meaning that they worked in the company fewer years than they were CEO there), we found one row with such wrong values. 
-```{r}
-CEO_complete[CEO_complete$ceoten > CEO_complete$comten, ]
-```
-
-We also saw two CEOs that had gone to grad school, but not to college, which seems highly unlikely to be true. Furthermore, the two rows seem to be almost exactly the same, apart from the age. Similar to the above, it looks like these values could have been entered twice incorrectly.
-```{r}
-CEO_complete[CEO_complete$grad > CEO_complete$college, ]
-```
-
-We decided to remove these three wrong rows, so that they didn’t influence any conclusions we drew from the data set.
-```{r}
-ceoten_comten_error = which(CEO_complete$ceoten > CEO_complete$comten)
-CEO_complete <- CEO_complete[-ceoten_comten_error,]
-grad_college_error = which(CEO_complete$grad > CEO_complete$college)
-CEO_complete <- CEO_complete[-grad_college_error,]
-```
 
 # Data and Univariate Analysis
 
@@ -100,7 +64,8 @@ salary_hist <- ggplot(data = CEO, aes(x = salary)) + geom_histogram(fill = "whit
 salary_hist
 ```
 
-The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. The mean being greater than the median demonstrates the effect of the right tail. Second, there are two or more possible outliers. The positive skew is illustrated through the fact that the leftmost values of the graph are only approximately 1.5 standard deviations away from the mean, while the higher values can exceed this. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.  We also note that it is not possible to have a salary less than 0. Moreover, we understand that outliers often tell very interesting stories in their own right, and we have labeled the clear outlier as the "rich ceo". At this moment, we cannot discard the "rich ceo" because there is no evidence that this is an error.
+The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. The mean being greater than the median demonstrates the effect of the right tail. Second, there are two or more possible outliers. The positive skew is illustrated through the fact that the leftmost values of the graph are only approximately 1.5 standard deviations away from the mean, while the higher values can exceed this. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.  We also note that it is not possible to have a salary less than zero and the presence of only non-negative salaries confirms this intuition. Moreover, we understand that outliers often tell very interesting stories in their own right, and we have labeled the clear outlier as the "rich ceo". At this moment, we cannot discard the "rich ceo" because there is no evidence that this is an error.
+
 
 ## Company Market Value
 ```{r}
@@ -109,14 +74,20 @@ mktval_hist <- ggplot(data = CEO, aes(x=CEO$mktval)) +
   labs(title="Distribution of Market Value") +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
   plot.title = element_text(hjust = .5)) + 
-  geom_vline(aes(xintercept=mean(CEO$mktval), colour = "mean"), linetype = "dashed") + 
-  geom_vline(aes(xintercept=median(CEO$mktval), colour = "median"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=mean(CEO$mktval, na.rm = T), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO$mktval, na.rm = T), colour = "median"), linetype = "dashed") + 
   scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
   scale_x_continuous(breaks = c(0, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000)) + 
   scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
 mktval_hist
+
+sd(CEO$mktval, na.rm = T)
+kurtosis(CEO$mktval, na.rm=T)
 ```
-The market value histogram appears in line with intuition about the stock market; many companies have lower market values while very few have market values above $5 billion. Furthermore, the histogram shows that companies with very large market values are rather rare and can be considered as potential outliers. The heavy positve skew of this distribution suggests that a transformation may be needed to accomodate issues of heteroskedacity.
+The market value histogram appears in line with our intuition about the stock market; most companies have lower market values around 7m (USD), with only a few going above 2.5b (USD). Furthermore, the histogram shows that companies with very large market values (above $4b) are rare and can be considered as potential outliers, as a host of values are greater than three standard deviations from the mean. Therefore, these “rich companies” can have an interesting effect on our analysis and should be considered carefully. The presence of these outliers creates a heavy right tail and the extreme peak towards the lower end of the market value spectrum suggests that a log transformation will be needed to accommodate issues of potential heteroskedasticity.
+
+While investigating the market value variable, we found that there were certain companies with a market value of negative one. As it is impossible for a company to have negative market value and there aren’t any other negative values for this variable, we reasoned that negative one signifies missing data. Comparing the histograms of the market value variable with and without the negative one rows, we see a small shift in the distribution of the variable near zero, together with a small increase of the mean. As we removed a few values close to zero, this small shift is to be expected.
+
 
 ## Company Profitability
 ```{r}
@@ -126,14 +97,20 @@ profits_hist <- ggplot(data = CEO, aes(x = profits)) +
   labs(title="Distribution of Company Profits in USD (Millions)") +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
   plot.title = element_text(hjust = .5)) + 
-  geom_vline(aes(xintercept=mean(profits), colour = "mean"), linetype = "dashed") + 
-  geom_vline(aes(xintercept=median(profits), colour = "median"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=mean(CEO$profits, na.rm = T), colour = "mean"), linetype = "dashed") + 
+  geom_vline(aes(xintercept=median(CEO$profits, na.rm = T), colour = "median"), linetype = "dashed") + 
   scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
   scale_x_continuous(breaks = c(-500, 0, 500, 1000, 1500, 2000, 2500, 3000)) + 
   scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60))
 profits_hist
+
+mean(CEO$profits, na.rm = T)
+sd(CEO$profits, na.rm=T)
+kurtosis(CEO$profits, na.rm=T)
 ```
-We applied a log10 scale and added 500 to shift everything to the right. As profits can be negative, we don't see that much of a positive skew in this graph. There are again outliers present on both sides, with a lot of companies with profits around 500. The standard deviation of profits is 401, which explains why the distribution is so wide.
+The distribution of profits is extraordinarily peaked near the zero value. Many of the companies in the sample do not make profits over 50 million, and a handful of companies are even in the red (as far as $463 million!). The skew of the distribution is very positive, pulling the mean up above 200, despite the prevalence of many values near zero. The peakedness and skew are confirmed by a very high value for kurtosis, above 11. The spread for the distribution is also rather large, at nearly 400. Even with a large standard deviation, there are many values over three standard deviations away from the mean in the positive direction. These outliers and the general shape of the profit distribution demand a transformation.
+
+In conducting a routine inspection of the profits data, we discovered that there were five observations that contained negative one. We were also able to confirm that these are the same five rows that have negative one for their market value. However, by examining the range of the profit variable, we notice that there are other negative values. In fact, these other values appear reasonable since, unlike with market value, companies can have negative profits for a specific year in which their costs exceed their revenues. Nonetheless, as only the aforementioned five rows had profits of negative one, we reason that negative one represents missing profit value as well. Comparing the profit histograms with and without these rows, we can see that the impact of excluding these observations has a marginal effect on the shape of the distribution as well as the descriptive statistics.
 
 ## CEO Age
 
@@ -155,13 +132,10 @@ The distribution of age in the sample looks fairly normal, except for the distin
 
 ## CEO Education
 ```{r}
-# Still need to make this table look nicer!
 CEO$college <- as.factor(CEO$college)
 CEO$grad <- as.factor(CEO$grad)
 levels(CEO$grad) <- c("No Grad", "Grad")
 levels(CEO$college) <- c("No College", "College")
-table(CEO$college, CEO$grad)
-table(CEO_complete$college, CEO_complete$grad)
 kable(table(CEO$college, CEO$grad), format = "markdown")
 ```
 For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table with the college variable, less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. There is less evidence to suggest that a graduate degree confers much additional advantage in becoming a CEO. Although the more interesting comparisons would be the education of CEOs to the average education of the population. We believe that CEOs represent a group of highly educated people in comparison to the average population.
@@ -188,6 +162,47 @@ The ceoten variable has a heavily, positively skewed distribution with most of t
 We note that both of these variables are left bounded, meaning they cannot go below zero.
 
 # Data Treatment
+
+# Handling of Variable Coding Issues and Missing Values
+
+Our careful examination of the data revealed that some variables, such as mktval and profits, had missing values, and that certain entries appeared to be erroneous. An initial check revealed no NA values, but looking at the mktval variable we could see some -1 values. 
+```{r}
+load("ceo_w203.RData")
+CEO[!complete.cases(CEO),]
+CEO[which(CEO$mktval == -1),]
+```
+
+As a company’s market value cannot be negative, we reasoned that -1 indicates missing data. As the five rows that has missing mktval also had -1 for profits, we reasoned that the same coding principle was used for that variable as well. While profits can be negative, it looks like -1 was exclusively used for missing data.
+```{r}
+CEO[which(CEO$profits == -1),]
+```
+
+The missing values were all in our key variables, so we couldn’t proceed with these rows in our analysis. Therefore, we set the -1 values to NA and removed the five rows from the set.
+```{r}
+CEO$mktval[CEO$mktval == -1] <- NA
+CEO$profits[CEO$profits == -1] <- NA
+CEO_complete <- CEO[complete.cases(CEO),]
+```
+
+During our analysis, we tried to determine if any instances contained erroneous data that could impact our results. Checking whether any of the CEOs had comten less than ceoten (meaning that they worked in the company fewer years than they were CEO there), we found one row with such wrong values. 
+```{r}
+CEO_complete[CEO_complete$ceoten > CEO_complete$comten, ]
+```
+
+We also saw two CEOs that had gone to grad school, but not to college, which seems highly unlikely to be true. Furthermore, the two rows seem to be almost exactly the same, apart from the age. Similar to the above, it looks like these values could have been entered twice incorrectly.
+```{r}
+CEO_complete[CEO_complete$grad > CEO_complete$college, ]
+```
+
+We decided to remove these three wrong rows, so that they didn’t influence any conclusions we drew from the data set.
+```{r}
+ceoten_comten_error = which(CEO_complete$ceoten > CEO_complete$comten)
+CEO_complete <- CEO_complete[-ceoten_comten_error,]
+grad_college_error = which(CEO_complete$grad > CEO_complete$college)
+CEO_complete <- CEO_complete[-grad_college_error,]
+```
+
+
 ```{r}
 salary_hist_final <- ggplot(data = CEO_complete, aes(x = log10(salary))) + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Log Salary in USD (1000s)") + ylab("Frequency") + 
   labs(title="Histogram of CEO Salary on Log Scale") +
