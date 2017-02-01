@@ -126,9 +126,12 @@ age_hist <- ggplot(data = CEO, aes(x = age)) +
   scale_color_manual(name = "Statistics", values = c(median = "blue", mean = "red")) +
   scale_x_continuous(breaks = seq(20,90,5))
 age_hist
+
+sd(CEO$age)
+kurtosis(CEO$age)
 ```
 
-The distribution of age in the sample looks fairly normal, except for the distinct peak at the center. From the kurtosis calculation, we might say this sample has more in common with a logistic distribution than a normal distribution. Of course, this is only a sample of 185, and we might find that kurtosis will approach 0 as the sample grows. However, it is likely that the lack of heavy tails is an important feature of CEO age, because we see the sparseness in CEOs below 30 and over 75. We could easily come up with an ad hoc story suggesting that CEOs below 30 don't have the requisite experience and CEOs above 75 cannot handle the rigors of the job. Moreover, the CEOs who are older than 75 may be CEOs in name only, with much of the business operations carried out by others. <<This might be verified by having very low salaries and/or very low market value companies.>> Another view would be to label points above 75 and below 30 as outliers, but this would be hasty without further information. We note that the mean is fairly high at 55 years old and the standard deviation is also rather large at 9.5. 
+The distribution of the age variable in the sample appears fairly symmetric and normal, as the mean and median are close together. Furthermore, the kurtosis of the variable signifies that age might be viewed more as a logistic distribution rather than a normal one. The high peak at the center suggests that there may be an optimal age range for becoming a CEO: between 50 and 65. However, the sparseness in CEOs below 30 and over 75 is an important feature of the distribution; these points are over two standard deviations away from the mean. An ad hoc story is readily available: it is reasonable to infer that people below 30 may lack the requisite experience to lead publicly-traded companies, while people above 75 may not be able to handle the rigors of such a demanding position. While the points above 75 and below 30 years may represent outliers, it would be unreasonable to exclude them. It is possible that the lack of observations in these buckets is an artifact of the sample.
 
 ## CEO Education
 ```{r}
