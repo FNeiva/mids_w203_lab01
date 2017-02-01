@@ -16,15 +16,27 @@ library(e1071)
 
 # Introduction
 
-The purpose of this exploratory data analysis is to determine whether there is an association between the salary of a chief executive officer (CEO) and the performance of the CEO’s company. To that effect, we analyzed a cross section of data gathered from a selection of different companies for the year 1990. In our analysis, we will demonstrate that there is a strong linear association between a CEO’s salary and the performance of a company, after the appropriate variable transformations have been implemented. Moreover, we will show that a CEO’s experience may also play a role in how much she receives in salary.
+The purpose of this exploratory data analysis is to determine whether there is an association between the salary of a chief executive officer (CEO) and the performance of the CEO’s company. To that effect, we analyzed a cross section of data gathered from a selection of different companies for the year 1990. In our analysis, we will demonstrate that there is a strong linear association between a CEO’s salary and the performance of a company, after the appropriate variable transformations have been implemented. Moreover, we will show that a CEO’s experience may also play a role in how much he or she receives in salary.
 
-Initially we will discuss how the constructs were operationalized in the study. This will lead us into an investigation of each variable’s sample distribution. From the univariate analysis, we will discuss oddities we found in the data and the necessary steps we took to create a clean data set. Then, we explore the bivariate relationships within the data, including a section on potential confounding effects. Lastly, we reiterate our key findings in the conclusion as well as some apparent limitations to the study. 
+Initially we will discuss how the constructs were operationalized in the study. This will lead us into an investigation of each variable’s sample distribution. From the univariate analysis, we will discuss oddities we found in the data and the necessary steps we took to create a clean data set. Then, we explore the bivariate relationships within the data, including a section on potential confounding effects. Lastly, we reiterate our key findings in the conclusion as well as some apparent limitations to the study.  
 
 # Operationalization of Constructs in Analysis  
+
+It is important for the purpose of clarity to discuss the concepts used in  question and how they are operationalized in the dataset. Our key variable in this study is the CEO Salary, as it is the one we are most interested in understanding its impact on company performance, which is our dependent variable. All other variables used in this study are independent, secondary variables.
 
 Before we can begin an analysis of the data, we have to determine the key concepts and how they were operationalized. If there is too much flexibility in how an operationalized variable can be interpreted, then the study design will be flawed and the results must be taken with a grain of salt. In our study, the salient yet undefined concept is company performance. We can define a successful company as one that has increased its market value over time and is able to consistently deliver results. Therefore, we can infer from this intuitive definition that measuring a company's market value should provide a perspective into company performance. (We note that are many different ways to calculate market value, and we cannot be sure how this term is defined in the data set.) However, many investors interpret a successful company as that which delivers high profitability versus share size. Therefore, “company performance” could also be reasonably measured by profits. 
 
 A more meaningful measure of company performance might come from simple feature engineering. Profits as a standalone measure is fairly meaningless without taking into account the size of the company. In which case, a ratio of profits to the market value might provide unforeseen insight into the relationship of company performance and a CEO’s salary.
+
+Hence, here are how the variables in this study were conceptually defined and operationalized for statistical analysis:
+
+**CEO Salary:** In this study, CEO salary was operationalized by measuring what we believe is the total salary per year, excluding any type of complex bonuses, of the CEO for each company in the sample. The values in the sample are measured in $1000s (thousands of dollars). This is the key variable in our study.
+
+**CEO Education:** We can conceptually define CEO Education as being the amount of formal education a person receives during his or her lifetime, such as holding a high school degree, college degree, graduate degree and so forth. Therefore, CEO education was operationalized as a construct with two different variables, College Education and Graduate Education, which measure whether the CEO of each company in the sample has a college or graduate degree respectively. Both are dummy variables, so their values in the samples are measured as 0 if the CEO of that company does not hold the indicated education degree or 1 if he or she does. 
+
+**CEO Experience:** Conceptually, we could define an experienced CEO to be one who is older, and therefore has more general life and work experience. Or, we could define experience to be company specific and only include the years of work at the same company, because this would suggest intimate knowledge of the business. Or, we could measure CEO experience as the number of years the CEO has been in that position, at the same company. All of these perspectives are valid interpretations of ‘experience’, and are not mutually exclusive or exhaustive. Henceforth, the experience of the CEO was operationalized as a construct with three different variables. The first one is the CEO age, measuring how old he is. The second one is Total time within the company, which measures the time the CEO has been working for that company. The third and last one is Time as the CEO of the company, measuring his time in the company holding the role of CEO. All three variables are measured in years.
+
+**Company Performance:** Company performance is an ambiguous construct with many different ways of being operationalized. For example, investors would view a company’s performance in terms of EPS compared to expectations, while a CEO might view performance as the minimization of cost or a decrease in the number of workplace injuries. A myriad of possible perspectives of company performance prohibit a simple measurement from being comprehensive. In this study, we operationalized company performance by adopting two potential measurements of company performance: profits and market value, both of them measured in millions of dollars. Since we are dealing with a cross section from 1990, we do not have year-over-year changes in market value. 
 
 # Data and Univariate Analysis
 
@@ -50,7 +62,7 @@ Each of theses variables will be now thoroughly analyzed and discussed independe
 
 ## CEO Salary
 
-We begin by analyzing the histogram of the CEO Salary variable.
+The histogram of the dependent variable salary shown below uncovers several important features about the salary sample:
 
 ```{r salary histogram}
 salary_hist <- ggplot(data = CEO, aes(x = salary)) + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Salary in USD (1000s)") + ylab("Frequency") + 
@@ -64,10 +76,12 @@ salary_hist <- ggplot(data = CEO, aes(x = salary)) + geom_histogram(fill = "whit
 salary_hist
 ```
 
-The histogram of the dependent variable salary uncovers two important features about the salary sample. First, the distribution has a positive skew, with many salaries bunched into bins between 500 and 1000 and a long tail towards the right. The mean being greater than the median demonstrates the effect of the right tail. Second, there are two or more possible outliers. The positive skew is illustrated through the fact that the leftmost values of the graph are only approximately 1.5 standard deviations away from the mean, while the higher values can exceed this. From this evidence, we believe that distribution for salary is non-normal and may require transformation, especially if we are to use models that assume normally distributed variables.  We also note that it is not possible to have a salary less than zero and the presence of only non-negative salaries confirms this intuition. Moreover, we understand that outliers often tell very interesting stories in their own right, and we have labeled the clear outlier as the "rich ceo". At this moment, we cannot discard the "rich ceo" because there is no evidence that this is an error.
+All salaries are non-negative, which follows our general expectations, with the distribution displaying a strong positive skew. It is illustrated by the leftmost values of the graph being approximately 1.5 standard deviations from the mean, while the rightmost value is approximately 9 standard deviations from the mean. 
 
+While many of the salaries collect into bins between $500 and $1000, one or more possible outliers visibly affect the value of the mean with respect to the median. The clear outlier may tell an interesting story or could be an error, so for now we just label it the “rich ceo”. This evidence leads us to reason that the salary distribution is non-normal and will require logarithmic transformation, especially if we are to use models that assume normally distributed variables.
 
 ## Company Market Value
+
 ```{r}
 mktval_hist <- ggplot(data = CEO, aes(x=CEO$mktval)) + 
   geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Market Value in USD (Millions)") + ylab("Frequency") + 
@@ -84,9 +98,10 @@ mktval_hist
 sd(CEO$mktval, na.rm = T)
 kurtosis(CEO$mktval, na.rm=T)
 ```
-The market value histogram appears in line with our intuition about the stock market; most companies have lower market values around 7m (USD), with only a few going above 2.5b (USD). Furthermore, the histogram shows that companies with very large market values (above $4b) are rare and can be considered as potential outliers, as a host of values are greater than three standard deviations from the mean. Therefore, these “rich companies” can have an interesting effect on our analysis and should be considered carefully. The presence of these outliers creates a heavy right tail and the extreme peak towards the lower end of the market value spectrum suggests that a log transformation will be needed to accommodate issues of potential heteroskedasticity.
 
-While investigating the market value variable, we found that there were certain companies with a market value of negative one. As it is impossible for a company to have negative market value and there aren’t any other negative values for this variable, we reasoned that negative one signifies missing data. Comparing the histograms of the market value variable with and without the negative one rows, we see a small shift in the distribution of the variable near zero, together with a small increase of the mean. As we removed a few values close to zero, this small shift is to be expected.
+The market value histogram shown above appears in line with our intuition about the stock market; most companies have lower market values around $7m, with only a few going above $2.5b. Furthermore, the histogram shows that companies with very large market values (above $4b) are rare and can be considered as potential outliers, as a host of values are greater than three standard deviations from the mean. Therefore, these “rich companies” can have an interesting effect on our analysis and should be considered carefully. The presence of these outliers creates a heavy right tail and the extreme peak towards the lower end of the market value spectrum suggests that a log transformation will be needed to accommodate issues of potential heteroskedasticity.
+
+While investigating the market value variable, we found that there were certain companies with a market value of negative one, seen on the left of the histogram. As it is impossible for a company to have negative market value and there aren’t any other negative values for this variable, we reasoned that negative one could probably be a coding issue to represent missing data. Comparing the histograms of the market value variable with and without the negative one rows, we see a small shift in the distribution of the variable near zero, together with a small increase of the mean. As we removed a few values close to zero, this small shift is to be expected.
 
 
 ## Company Profitability
@@ -108,9 +123,22 @@ mean(CEO$profits, na.rm = T)
 sd(CEO$profits, na.rm=T)
 kurtosis(CEO$profits, na.rm=T)
 ```
+
 The distribution of profits is extraordinarily peaked near the zero value. Many of the companies in the sample do not make profits over 50 million, and a handful of companies are even in the red (as far as $463 million!). The skew of the distribution is very positive, pulling the mean up above 200, despite the prevalence of many values near zero. The peakedness and skew are confirmed by a very high value for kurtosis, above 11. The spread for the distribution is also rather large, at nearly 400. Even with a large standard deviation, there are many values over three standard deviations away from the mean in the positive direction. These outliers and the general shape of the profit distribution demand a transformation.
 
-In conducting a routine inspection of the profits data, we discovered that there were five observations that contained negative one. We were also able to confirm that these are the same five rows that have negative one for their market value. However, by examining the range of the profit variable, we notice that there are other negative values. In fact, these other values appear reasonable since, unlike with market value, companies can have negative profits for a specific year in which their costs exceed their revenues. Nonetheless, as only the aforementioned five rows had profits of negative one, we reason that negative one represents missing profit value as well. Comparing the profit histograms with and without these rows, we can see that the impact of excluding these observations has a marginal effect on the shape of the distribution as well as the descriptive statistics.
+In conducting a routine inspection of the profits data and given the possible coding issues we have previously found while analyzing market value, we discovered that there were five observations that contained negative one for Profits as well. We were also able to confirm that these are the same five rows that have negative one for their market value, as shown below:
+
+```{r}
+knitr::kable(CEO[which(CEO$mktval == -1 & CEO$profits == -1),], 
+             col.names = c("Salary","Age","College","Grad.","Comp. Ten.","CEO Ten.","Profits","Mkt. Value"), 
+             format = "latex")
+```
+
+However, by examining the range of the profit variable, we notice that there are other negative values. In fact, these other values appear reasonable since, unlike with market value, companies can have negative profits for a specific year in which their costs exceed their revenues. Nonetheless, as only the aforementioned five rows had profits of negative one, we reason that negative one represents missing profit value as well. Comparing the profit histograms with and without these rows, we can see that the impact of excluding these observations has a marginal effect on the shape of the distribution as well as the descriptive statistics.
+
+We applied a log10 scale and added 500 to shift everything to the right. As profits can be negative, we don't see that much of a positive skew in this graph, shown below. There are again outliers present on both sides, with a lot of companies with profits around 500. The standard deviation of profits is 401, which explains why the distribution is so wide.
+
+<R chunk with transformed histogram>
 
 ## CEO Age
 
@@ -134,42 +162,66 @@ kurtosis(CEO$age)
 The distribution of the age variable in the sample appears fairly symmetric and normal, as the mean and median are close together. Furthermore, the kurtosis of the variable signifies that age might be viewed more as a logistic distribution rather than a normal one. The high peak at the center suggests that there may be an optimal age range for becoming a CEO: between 50 and 65. However, the sparseness in CEOs below 30 and over 75 is an important feature of the distribution; these points are over two standard deviations away from the mean. An ad hoc story is readily available: it is reasonable to infer that people below 30 may lack the requisite experience to lead publicly-traded companies, while people above 75 may not be able to handle the rigors of such a demanding position. While the points above 75 and below 30 years may represent outliers, it would be unreasonable to exclude them. It is possible that the lack of observations in these buckets is an artifact of the sample.
 
 ## CEO Education
+
+For categorical variables such as college and grad school, we examined their frequency distribution using tables. Those tables are shown below:
+
 ```{r}
 CEO$college <- as.factor(CEO$college)
 CEO$grad <- as.factor(CEO$grad)
-levels(CEO$grad) <- c("No Grad", "Grad")
+levels(CEO$grad) <- c("No Graduation", "Graduation")
 levels(CEO$college) <- c("No College", "College")
-kable(table(CEO$college, CEO$grad), format = "markdown")
+kable(table(CEO$college, CEO$grad), format = "latex")
 ```
-For categorical variables such as college and grad, we examined their frequency distribution using tables. Evident from the table is that less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. Meanwhile, there is less evidence to suggest that a post-tertiary degree confers much additional advantage over a college degree in becoming a CEO. While more education would be considered beneficial within the general population, it could be the case that extensive work and leadership experience is more valuable when senior management positions are filled. That is, the position for CEO tends to attract or possibly require highly educated individuals.
+
+Evident from the table is that less than 4% of the CEOs in the sample didn't graduate from college. It would seem that post-secondary education is a necessary attribute for a CEO; this is not a surprising attribute of the data since performance in school tends to be an indicator of work ethics and/or intelligence. Moreover, boards that choose CEOs tend to prefer credentialed individuals as a means of mitigating risk. Meanwhile, the split between college and a post-tertiary degree are much closer. Meanwhile, there is less evidence to suggest that a post-tertiary degree confers much additional advantage over a college degree in becoming a CEO. While more education would be considered beneficial within the general population, it could be the case that extensive work and leadership experience is more valuable when senior management positions are filled. That is, the position for CEO tends to attract or possibly require highly educated individuals.
 
 Finally, there are two CEOs that went to grad school, but not to college, which seems highly unlikely to be true. It is possible to imagine situations where people who have not gone to college go on to get honorary degrees from universities for special achievements, thus falling in the above case. However, since we have no information on the way the data was gathered, we cannot assume such honorary degrees were included in the study. Furthermore, these two CEOs seem to be almost exactly the same, apart from the age, as seen in their records from the sample shown below: 
 
 ```{r}
-CEO[c(16,51),]
+kable(CEO[c(16,51),], 
+      col.names = c("Salary","Age","College","Grad.","Comp. Ten.","CEO Ten.","Profits","Mkt. Value"),
+      format = "latex")
 ```
-We suspect that this might be a case of erroneous entry that was recorded twice, meaning that these entries should be excluded from the analysis. As the comparison between the dirty (including two entries) and the clean data shows, the omission of these two variables does not have a meaningful effect on the results drawn from the study.
 
-## CEO Total Time Within Company
+We suspect that this might be a case of erroneous entry that was recorded twice, meaning that these entries should be excluded from the analysis. As the comparison between the dirty (including two entries) and the clean data shows, the omission of these two variables does not have a meaningful effect on the results drawn from the study. 
+
+
+## CEO History Within the Company
+
+We will analyze the variables indicating the total time of the CEO as an employee of the company and the duration of his tenure as a CEO.
+
+The total company tenure variable appears to have a bimodal distribution, with one peak near 33 years and another at just under 10 years experience, as we can see from the red colored fill in the histogram below:
+
 ```{r, warning = FALSE, message = FALSE}
 ten_ceo_hist <- ggplot(data = CEO) + geom_histogram(aes(x = comten, fill = "comten"), alpha = 0.3, position = "identity") +
   geom_histogram(aes(x = ceoten, fill = "ceoten"), alpha = 0.3, position = "identity") + 
-  scale_fill_manual(values = c(comten = "red", ceoten = "green")) +
+  scale_fill_manual(values = c(comten = "red", ceoten = "green"), labels = c(comten = "Total", ceoten = "As CEO")) +
   theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
         plot.title = element_text(hjust = .5)) +
   labs(title = "Distribution of Years as CEO and of Years at Company", fill = "Tenure Type") +
   xlab("Years") + ylab("Count") +
-  geom_vline(aes(xintercept=mean(comten), colour = "mean comten"), linetype = "dashed") +
-  geom_vline(aes(xintercept=mean(ceoten), colour = "mean ceoten"), linetype = "dashed") + 
-  scale_color_manual(name = "Statistics", values = c(mean = "blue", mean = "red")) +
+  geom_vline(aes(xintercept=mean(comten), colour = "meancom"), linetype = "dashed") +
+  geom_vline(aes(xintercept=mean(ceoten), colour = "meanceo"), linetype = "dashed") + 
+  scale_color_manual(name = "Statistics", values = c(meancom = "blue", meanceo = "red"), labels = c(meancom = "Total", meanceo = "As CEO")) +
   scale_x_continuous(breaks = c(0,10,20,30,40,50,60)) + scale_y_continuous(breaks = seq(0,35,5))
 ten_ceo_hist
+kurtosis(CEO$comten)
 ```
-The comten variable appears to be bimodal, with one peak near 33 years and another at just under 10 years. This suggest that there may be two populations within this variable. The mean tenure of a CEO is just over 20 years with a very large standard deviation of approximately 12. However, the kurtosis of -1 suggests that we might be dealing with more of a uniformly distributed sample; this is certainly contrary to visual inspection, which we believe is more reliable in this case. We note the presence of a small right tail that skews the distribution a little bit. There is one apparent outlier: a CEO that has commited an entire lifetime to a company. <<We can discuss this further to make sure we are all in agreement>>
 
-The ceoten variable has a heavily, positively skewed distribution with most of the CEO's having tenure under 10 years. The mean and standard deviation are nearly equal at about 7 years. Given how bunched the data is around the mean, we believe the long right tail and some outliers are inflating the average. This is also evidenced by the median being less than the mean. Kurtosis is highly positive, agreeing with the peaked nature of the histogram. None of the CEOs in the sample have been CEO for longer than 40 years. 
+While a kurtosis of negative one suggests that we might be dealing with a more uniformly distributed sample, a quick visual inspection shows that this might be misleading. There may be two populations within this variable: one could be people who were hired externally at an already high position before moving up, while the other could include dedicated workers that were chosen internally after climbing up the ranks. The mean company tenure of a CEO is just over 20 years with a very large standard deviation of approximately 12. This fact, combined with the above findings, suggests that longer tenures don’t necessarily guarantee a CEO position. There is a small right tail that slightly skews the distribution, which denotes a CEO that has committed almost an entire lifetime to a company.
 
-We note that both of these variables are left bounded, meaning they cannot go below zero.
+The CEO tenure variable has a heavily, positively skewed distribution with most of the CEOs having tenure under 10 years, as seen in the green fill in the histogram above. It would be interesting to investigate whether a major economic or political event happening around 1989 could have forced many companies to change their CEOs. The mean and standard deviation of the variable are nearly equal at about 7 years. Given how bunched the data is around the mean, the long right tail and some outliers seem to be responsible for the inflated average. This is also evidenced by the median being less than the mean. Kurtosis is highly positive, agreeing with the peaked nature of the histogram. None of the CEOs in the sample have been CEO for longer than 40 years. 
+
+To guarantee data quality, we checked whether any of the CEOs had worked in a company for fewer years than they were CEO there. We found one row which seems to satisfy this condition, which is show below:
+
+```{r}
+kable(CEO[CEO$comten < CEO$ceoten,], 
+      col.names = c("Salary","Age","College","Grad.","Comp. Ten.","CEO Ten.","Profits","Mkt. Value"),
+      format = "latex")
+```
+
+We considered this an erroneous record since it is impossible to happen in real life, possibly an error on the data gathering process. We will keep this data point for future treament.
+
 
 # Data Treatment
 
