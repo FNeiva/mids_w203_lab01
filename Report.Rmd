@@ -202,6 +202,9 @@ grad_college_error = which(CEO_complete$grad > CEO_complete$college)
 CEO_complete <- CEO_complete[-grad_college_error,]
 ```
 
+The univariate analysis of the variables demonstrated that some key variables appear to have skewed distributions. Specifically, salary, profit, and market value all have positively skewed distributions, which is to be expected when dealing with income-related variables. In order to clearly visualize and to understand the relationship between these variables, we applied a log transformation. This nonlinear transformation should assist us in detecting any linear relationships, if they exist.
+
+The log transformed histogram for salary appears to resemble a normal distributed variable more closely, while the same cannot be said of the transformed market value and salary variables. The market value histogram shows marked improvement because the very long tail has been substantially reduced. However, the distribution retained some of its positive skew and appears lognormally distributed. Similar to the market value transformation, the histogram of the profit variable is less skewed than before, however, there remains a massive peak that is cause for concern. Since logarithmic transformations cannot handle negative values, we added a constant greater than the minimum value to each instance of profit. Moreover, much of the data is very tightly bunched and this will cause some non-constant variance issues for modeling, especially considering the presence of some potential influential outliers. The log transformations are rather interpretable for the profits and market value, but if we were insistent on models with strict assumptions of normality, we could attempt a box-cox transformation.
 
 ```{r}
 salary_hist_final <- ggplot(data = CEO_complete, aes(x = log10(salary))) + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Log Salary in USD (1000s)") + ylab("Frequency") + 
