@@ -1,23 +1,22 @@
 ---
 title: "Exploratory Analysis of CEO Salary Data"
-author: "Felipe Campos, Josh Wilson and Stanimir Vichev"
-date: "1/24/2017"
+author: "Felipe Campos, Stanimir Vichev, Josh Wilson"
+date: "2/2/2017"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("ggplot2")
-install.packages("gridExtra")
 library("gridExtra")
 library("knitr")
 ```
 
 # Introduction
 
-The focus of this study is to try to determine whether a company's performance is related to its CEO salary. To accomplish that, data gathered from a selection of different companies will be used and the whole treatment and analysis of the data will be documented in this study along with relevant findings. The conclusions taken from these findings will then be discussed.
+The purpose of this exploratory data analysis is to determine whether there is an association between the salary of a chief executive officer (CEO) and the performance of the CEO’s company. To that effect, we analyzed a cross section of data gathered from a selection of different companies for the year 1990. In our analysis, we will demonstrate that there is a strong linear association between a CEO’s salary and the performance of a company, after the appropriate variable transformations have been implemented. Moreover, we will show that a CEO’s experience may also play a role in how much she receives in salary.
 
-It is important for the purpose of this study, however, to initially discuss the design of this analysis and the concepts used to operationalize it. The most relevant concept used throughout this report is company performance, given that it is what we will be measuring against CEO data. We can use a conceptual definition that a successful company is one that has an increased market value and is able to consistently deliver results. Therefore, to measure a company's performance this concept will be operationalized in this study by measuring that company's market value as well as its profitability. Therefore, a company could be considered as presenting successful performance if it delivered profits in accordance to its market value. 
+Initially we will discuss how the constructs were operationalized in the study. This will lead us into an investigation of each variable’s sample distribution. From the univariate analysis, we will discuss oddities we found in the data and the necessary steps we took to create a clean data set. Then, we explore the bivariate relationships within the data, including a section on potential confounding effects. Lastly, we reiterate our key findings in the conclusion as well as some apparent limitations to the study. 
 
 # Possible inclusion of discussion about operationalization of salary and company performance
 
