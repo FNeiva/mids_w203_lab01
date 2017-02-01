@@ -223,50 +223,25 @@ kable(CEO[CEO$comten < CEO$ceoten,],
 We considered this an erroneous record since it is impossible to happen in real life, possibly an error on the data gathering process. We will keep this data point for future treament.
 
 
-# Data Treatment
+# Data Cleansing and Transformation
 
-# Handling of Variable Coding Issues and Missing Values
+During our univariate analysis, we tried to determine if there was any erroneous data that could impact our results. Apart from the above two instances in CEO Education, where we found what seemed to be a duplicate entry with the CEO having Graduate School but no College level education, the -1 values in market values and profits and the CEO who has been a CEO for longer than he or she has been an employee of the company, there weren’t any other instance of problematic data in the data set. Those possibly erroneous records are summarized in the table below: 
 
-Our careful examination of the data revealed that some variables, such as mktval and profits, had missing values, and that certain entries appeared to be erroneous. An initial check revealed no NA values, but looking at the mktval variable we could see some -1 values. 
 ```{r}
-load("ceo_w203.RData")
-CEO[!complete.cases(CEO),]
-CEO[which(CEO$mktval == -1),]
+errors <- c(16,51,which((CEO$comten < CEO$ceoten) | (CEO$mktval == -1 & CEO$profits == -1)))
+kable(CEO[errors,], 
+      col.names = c("Salary","Age","College","Grad.","Comp. Ten.","CEO Ten.","Profits","Mkt. Value"))
 ```
 
-As a company’s market value cannot be negative, we reasoned that -1 indicates missing data. As the five rows that has missing mktval also had -1 for profits, we reasoned that the same coding principle was used for that variable as well. While profits can be negative, it looks like -1 was exclusively used for missing data.
+Without proper documentation from the data gathering process, we cannot assume anything about those problematic records and hence it is impossible to try to adjust them. Therefore, to avoid them from corrupting the analysis, those data points were removed prior to bivariate analysis. As stated previously during the univariate analysis of each variable, the removal of those records did not alter the descriptive statistical meaningfully.
+
 ```{r}
-CEO[which(CEO$profits == -1),]
+CEO_complete <- CEO[-errors,]
 ```
 
-The missing values were all in our key variables, so we couldn’t proceed with these rows in our analysis. Therefore, we set the -1 values to NA and removed the five rows from the set.
-```{r}
-CEO$mktval[CEO$mktval == -1] <- NA
-CEO$profits[CEO$profits == -1] <- NA
-CEO_complete <- CEO[complete.cases(CEO),]
-```
+The univariate analysis of the variables also demonstrated that some key variables appear to have skewed distributions. Specifically, salary, profit, and market value all have positively skewed distributions, which is to be expected when dealing with income-related variables. In order to clearly visualize and to understand the relationship between these variables, we applied a log transformation. This nonlinear transformation should assist us in detecting any linear relationships, if they exist.
 
-During our analysis, we tried to determine if any instances contained erroneous data that could impact our results. Checking whether any of the CEOs had comten less than ceoten (meaning that they worked in the company fewer years than they were CEO there), we found one row with such wrong values. 
-```{r}
-CEO_complete[CEO_complete$ceoten > CEO_complete$comten, ]
-```
-
-We also saw two CEOs that had gone to grad school, but not to college, which seems highly unlikely to be true. Furthermore, the two rows seem to be almost exactly the same, apart from the age. Similar to the above, it looks like these values could have been entered twice incorrectly.
-```{r}
-CEO_complete[CEO_complete$grad > CEO_complete$college, ]
-```
-
-We decided to remove these three wrong rows, so that they didn’t influence any conclusions we drew from the data set.
-```{r}
-ceoten_comten_error = which(CEO_complete$ceoten > CEO_complete$comten)
-CEO_complete <- CEO_complete[-ceoten_comten_error,]
-grad_college_error = which(CEO_complete$grad > CEO_complete$college)
-CEO_complete <- CEO_complete[-grad_college_error,]
-```
-
-The univariate analysis of the variables demonstrated that some key variables appear to have skewed distributions. Specifically, salary, profit, and market value all have positively skewed distributions, which is to be expected when dealing with income-related variables. In order to clearly visualize and to understand the relationship between these variables, we applied a log transformation. This nonlinear transformation should assist us in detecting any linear relationships, if they exist.
-
-The log transformed histogram for salary appears to resemble a normal distributed variable more closely, while the same cannot be said of the transformed market value and salary variables. The market value histogram shows marked improvement because the very long tail has been substantially reduced. However, the distribution retained some of its positive skew and appears lognormally distributed. Similar to the market value transformation, the histogram of the profit variable is less skewed than before, however, there remains a massive peak that is cause for concern. Since logarithmic transformations cannot handle negative values, we added a constant greater than the minimum value to each instance of profit. Moreover, much of the data is very tightly bunched and this will cause some non-constant variance issues for modeling, especially considering the presence of some potential influential outliers. The log transformations are rather interpretable for the profits and market value, but if we were insistent on models with strict assumptions of normality, we could attempt a box-cox transformation.
+The log transformed histogram for salary appears to resemble a normal distributed variable more closely, as shown below:
 
 ```{r}
 salary_hist_final <- ggplot(data = CEO_complete, aes(x = log10(salary))) + geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Log Salary in USD (1000s)") + ylab("Frequency") + 
@@ -280,7 +255,8 @@ salary_hist_final <- ggplot(data = CEO_complete, aes(x = log10(salary))) + geom_
 salary_hist_final
 ```
 
-Market Value 
+The same cannot be said of the transformed market value and profit variables. The market value histogram displayed below shows marked improvement because the very long tail has been substantially reduced. However, the distribution retained some of its positive skew and appears lognormally distributed.
+
 ```{r}
 mktval_hist_final <- ggplot(data = CEO_complete, aes(x=log10(mktval))) + 
   geom_histogram(fill = "white", colour = "black", bins = 40) + xlab("Market Value in USD (Millions) Log Scale") + ylab("Frequency") + 
@@ -293,6 +269,8 @@ mktval_hist_final <- ggplot(data = CEO_complete, aes(x=log10(mktval))) +
 mktval_hist_final
 
 ```
+
+Similar to the market value transformation, the resulting histogram of the profit variable shown below is less skewed than before, however, there remains a massive peak that is cause for concern. Since logarithmic transformations cannot handle negative values, we added a constant greater than the minimum value to each instance of profit. Moreover, much of the data is very tightly bunched and this will cause some non-constant variance issues for modeling, especially considering the presence of some potential influential outliers. The log transformations are rather interpretable for the profits and market value, but if we were insistent on models with strict assumptions of normality, we could attempt a box-cox transformation.
 
 ```{r}
 profits_hist_final <- ggplot(data = CEO_complete, aes(x = log10(profits + 500))) + 
@@ -309,6 +287,12 @@ profits_hist_final <- ggplot(data = CEO_complete, aes(x = log10(profits + 500)))
 profits_hist_final
 ```
 
+Lastly, the separate variables College Education and Graduate Education have been merged into a single variable, indicating 0 for no education, 1 for college education and 2 for graduate education, as we believe it will aid in visualization and analysis.
+
+```{r}
+CEO_complete$ed <- factor(CEO_complete$college + CEO_complete$grad)
+levels(CEO_complete$ed) <- c("No College", "College", "Grad School")
+```
 
 # Analysis of Bivariate Relationships (uses cleaned data and transformations)
 
@@ -330,8 +314,7 @@ cor(log10(CEO_complete$mktval),log10(CEO_complete$salary)) # 0.481491
 Salary and education
 ```{r}
 # The two lines below will be moved up to the "coding issues" section.
-CEO_complete$ed <- factor(CEO_complete$college + CEO_complete$grad)
-levels(CEO_complete$ed) <- c("No College", "College", "Grad School")
+
 
 salary_v_ed <- ggplot(data = CEO_complete, aes(x = factor(ed), y = salary))
 salary_v_ed + geom_boxplot() + 
