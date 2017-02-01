@@ -394,25 +394,64 @@ In fact, one would expect companies with high market value to be highly profitab
 
 Therefore, it seems that the relationship between profit and market value could be a potential source of a confounding effect given that there must be other variables not accounted for in this study that are driving both values. This relationship will be discussed later with other potential confounding effects.
 
+## Salary and Company Profitability
 
+There is an undeniably strong relationship between the CEO Salary and Company Profitability, as shown in the plot below:
 
-Tenure as CEO vs. Age with Company Tenure
-
-# Potential Confounding Effects in Bivariate Relationships
 ```{r}
-CeoTen_v_tenure <- ggplot(data = CEO_complete, aes(x = CEO_complete$ceoten, 
-                                           y = CEO_complete$age,
-                                           colour = CEO_complete$ceoten)) +
-  geom_point(position = position_jitter(width = 0.0, height = 0.25), alpha=.5) + geom_smooth() +
-  xlab("Years as CEO") +
-  ylab("Years on Earth") +
-  theme(legend.position = c(1,0), legend.justification= c(1,0), legend.background = element_blank(),
+mktval_v_profits <- ggplot(data = CEO_complete, aes(x = log10(CEO_complete$salary), 
+                                           y = log10(CEO_complete$profits + 500))) +
+  geom_point(position = position_jitter(width = 0, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("CEO Salary in USD (Thousands) on Log Scale") +
+  ylab("Company Profits in USD (Millions) on Log Scale") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
         plot.title = element_text(hjust = .5)) +
-  labs(title = "CEO Tenure vs. Age", colour ="Years at Co") +
-  scale_color_gradient(low = "blue", high = "white") + scale_x_continuous(breaks = seq(0,35,5))
+  labs(title = "CEO Salary vs. Company Profits on Log-Log Scale")
   
-CeoTen_v_tenure
+mktval_v_profits
+cor(log10(CEO_complete$salary),log10(CEO_complete$profits + 500))
 ```
+
+While it is likely that companies with good profitability would reward their CEO with a high salary, it is unlikely that this would be sole reason. 
+
+## Market Value and Company Tenure
+
+```{r}
+mktval_v_profits <- ggplot(data = CEO_complete, aes(x = CEO_complete$comten, 
+                                           y = CEO_complete$mktval)) +
+  geom_point(position = position_jitter(width = 0, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("Company Market Value in USD (Millions) on Log Scale") +
+  ylab("Company Profits in USD (Millions) on Log Scale") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Company Market Value vs. Company Profits on Log-Log Scale")
+  
+mktval_v_profits
+cor(CEO_complete$comten,CEO_complete$mktval)
+```
+
+
+## Market Value and Age
+
+```{r}
+mktval_v_profits <- ggplot(data = CEO_complete, aes(x = CEO_complete$age, 
+                                           y = CEO_complete$mktval)) +
+  geom_point(position = position_jitter(width = 0, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("Company Market Value in USD (Millions) on Log Scale") +
+  ylab("Company Profits in USD (Millions) on Log Scale") +
+  theme(legend.position = c(1,1), legend.justification= c(1,1), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "Company Market Value vs. Company Profits on Log-Log Scale")
+  
+mktval_v_profits
+cor(CEO_complete$age,CEO_complete$mktval)
+```
+
+
+
+
+
+
 
 
 # On Possible Confounding Effects
@@ -455,4 +494,22 @@ mktval_v_profits_v2 <- ggplot(data = CEO_complete, aes(x = log10(CEO_complete$mk
 mktval_v_profits_v2
 ```
 
+
+Tenure as CEO vs. Age with Company Tenure
+
+# Potential Confounding Effects in Bivariate Relationships
+```{r}
+CeoTen_v_tenure <- ggplot(data = CEO_complete, aes(x = CEO_complete$ceoten, 
+                                           y = CEO_complete$age,
+                                           colour = CEO_complete$ceoten)) +
+  geom_point(position = position_jitter(width = 0.0, height = 0.25), alpha=.5) + geom_smooth() +
+  xlab("Years as CEO") +
+  ylab("Years on Earth") +
+  theme(legend.position = c(1,0), legend.justification= c(1,0), legend.background = element_blank(),
+        plot.title = element_text(hjust = .5)) +
+  labs(title = "CEO Tenure vs. Age", colour ="Years at Co") +
+  scale_color_gradient(low = "blue", high = "white") + scale_x_continuous(breaks = seq(0,35,5))
+  
+CeoTen_v_tenure
+```
 
